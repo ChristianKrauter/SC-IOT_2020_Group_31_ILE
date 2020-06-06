@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class broker : MonoBehaviour
+public class Broker : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

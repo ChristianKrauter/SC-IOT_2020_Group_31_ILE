@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class airConditioning : MonoBehaviour
+public class AirConditioning : MonoBehaviour
 {
     // Start is called before the first frame update
     public void TurnOn(int temp)

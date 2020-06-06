@@ -2,16 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class window : MonoBehaviour
+public class Window : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Animator anim;
+
     public void Open()
     {
+        anim.SetTrigger("open");
         print("window opened");
     }
 
     public void Close()
     {
+        anim.SetTrigger("close");
         print("window closed");
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            anim.ResetTrigger("close");
+            Open();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            anim.ResetTrigger("open");
+            Close();
+        }
     }
 }

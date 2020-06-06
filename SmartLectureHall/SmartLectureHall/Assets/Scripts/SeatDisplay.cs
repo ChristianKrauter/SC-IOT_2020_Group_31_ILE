@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class seatDisplay : MonoBehaviour
+public class SeatDisplay : MonoBehaviour
 {
     public void changeDisplay(int seatNumber, string color = "green")
     {

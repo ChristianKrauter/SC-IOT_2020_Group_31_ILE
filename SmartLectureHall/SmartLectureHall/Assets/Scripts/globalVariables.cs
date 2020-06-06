@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class globalVariables : MonoBehaviour
+public class GlobalVariables : MonoBehaviour
 {
     public float outer_temperature = 25.0f;
     public float inner_base_temperature = 23.0f;
