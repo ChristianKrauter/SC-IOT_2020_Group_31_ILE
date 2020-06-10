@@ -18,7 +18,7 @@ public class Led : MonoBehaviour
         {
             meshRenderer.material = red_material;
         }
-        print("chair changed to " + color);
+        //print("led changed to " + color);
     }
 
     // Start is called before the first frame update
@@ -31,11 +31,11 @@ public class Led : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             ChangeColor("red");
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             ChangeColor("green");
         }

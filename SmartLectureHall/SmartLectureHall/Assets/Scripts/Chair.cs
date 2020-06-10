@@ -12,13 +12,13 @@ public class Chair : MonoBehaviour
     public void LockChair()
     {
         anim.SetTrigger("lock");
-        print("chair locked");
+        //print("chair locked");
     }
 
     public void UnlockChair()
     {
         anim.SetTrigger("unlock");
-        print("chair unlocked");
+        //print("chair unlocked");
     }
 
     public void OccupyChair()
@@ -42,7 +42,7 @@ public class Chair : MonoBehaviour
         {
             meshRenderer.material = red_material;
         }
-        print("chair changed to " + color);
+        //print("chair changed to " + color);
     }
 
     public void Start()
@@ -55,13 +55,13 @@ public class Chair : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             anim.ResetTrigger("unlock");
             ChangeIndicator("red");
             LockChair();
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             anim.ResetTrigger("lock");
             ChangeIndicator("green");
