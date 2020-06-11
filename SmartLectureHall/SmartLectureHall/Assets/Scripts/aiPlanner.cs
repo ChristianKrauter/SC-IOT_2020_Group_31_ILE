@@ -99,10 +99,33 @@ public class AiPlanner : MonoBehaviour
 
     bool openWindowCO2Control(bool openWindowFlag)
     {
-        return true;
+        float CO2_IN = 18.0f; //TODO get Temp_IN
+        float CO2_OUT = 22.0f; //TODO get Temp_OUT
+        float wantedCO2 = 22.5f; //TODO get wantedTemp
+
+        if (CO2_IN != CO2_OUT)
+        {
+            if (openWindowFlag)
+            {
+                if (wantedCO2 > CO2_IN && CO2_IN > CO2_OUT)
+                {
+                    openWindowFlag = false;
+                    //TODO: activateAireCondition()
+                }
+                else
+                {
+                    openWindowFlag = true;
+                }
+            }
+            else
+            {
+                //TODO: activateAireCondition()
+            }
+        }
+        return openWindowFlag;
     }
 
-    
+
 
 
 }
