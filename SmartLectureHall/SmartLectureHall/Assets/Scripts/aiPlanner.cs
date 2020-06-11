@@ -16,7 +16,35 @@ public class AiPlanner : MonoBehaviour
 
     }
 
-    bool openWindowTemperatureControl(){
+    void openWindowControl()
+    {
+        bool openWindowFlag;
+        bool isWindowOpen = false; //TODO: get isWindowOpen
+
+        while (true){
+            openWindowFlag = openWindowTemperatureControl();
+            openWindowFlag = openWindowHumidityControl();
+            openWindowFlag = openWindowCO2Control();
+
+            if (openWindowFlag)
+            {
+                if (isWindowOpen)
+                {
+                    //TODO: openWindow();
+                    //TODO: activateAireCondition
+                }
+                else {
+                    //TODO: openWindow();
+                }
+            }
+            else {
+                //TODO: closeWindow();
+            }
+        }
+    }
+
+    bool openWindowTemperatureControl()
+    {
         return true;
     }
 
@@ -30,10 +58,7 @@ public class AiPlanner : MonoBehaviour
         return true;
     }
 
-    void openWindowControl()
-    {
-
-    }
+    
 
 
 }
