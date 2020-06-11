@@ -22,16 +22,17 @@ public class AiPlanner : MonoBehaviour
         bool isWindowOpen = false; //TODO: get isWindowOpen
 
         while (true){
-            openWindowFlag = openWindowTemperatureControl();
-            openWindowFlag = openWindowHumidityControl();
-            openWindowFlag = openWindowCO2Control();
+            openWindowFlag = true;
+            openWindowFlag = openWindowTemperatureControl(openWindowFlag);
+            openWindowFlag = openWindowHumidityControl(openWindowFlag);
+            openWindowFlag = openWindowCO2Control(openWindowFlag);
 
             if (openWindowFlag)
             {
                 if (isWindowOpen)
                 {
                     //TODO: openWindow();
-                    //TODO: activateAireCondition
+                    //TODO: activateAireCondition()
                 }
                 else {
                     //TODO: openWindow();
@@ -43,17 +44,37 @@ public class AiPlanner : MonoBehaviour
         }
     }
 
-    bool openWindowTemperatureControl()
+    bool openWindowTemperatureControl(bool openWindowFlag)
+    {
+        float Temp_IN = 18.0f; //TODO get Temp_IN
+        float Temp_OUT = 22.0f; //TODO get Temp_OUT
+        float wantedTemp = 22.5f; //TODO get wantedTemp
+
+        if (Temp_IN != Temp_OUT) {
+            if (openWindowFlag)
+            {
+                if (wantedTemp > Temp_IN && Temp_IN > Temp_OUT)
+                {
+                    openWindowFlag = false;
+                    //TODO: activateAireCondition()
+                }
+                else {
+                    openWindowFlag = true;
+                }
+            }
+            else {
+                //TODO: activateAireCondition()
+            }
+        }
+        return openWindowFlag;
+    }
+
+    bool openWindowHumidityControl(bool openWindowFlag)
     {
         return true;
     }
 
-    bool openWindowHumidityControl()
-    {
-        return true;
-    }
-
-    bool openWindowCO2Control()
+    bool openWindowCO2Control(bool openWindowFlag)
     {
         return true;
     }
