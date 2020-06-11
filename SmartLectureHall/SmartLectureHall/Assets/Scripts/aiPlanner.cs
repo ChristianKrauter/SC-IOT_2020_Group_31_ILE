@@ -71,7 +71,30 @@ public class AiPlanner : MonoBehaviour
 
     bool openWindowHumidityControl(bool openWindowFlag)
     {
-        return true;
+        float Humidity_IN = 18.0f; //TODO get Temp_IN
+        float Humidity_OUT = 22.0f; //TODO get Temp_OUT
+        float wantedHumidity = 22.5f; //TODO get wantedTemp
+
+        if (Humidity_IN != Humidity_OUT)
+        {
+            if (openWindowFlag)
+            {
+                if (wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT)
+                {
+                    openWindowFlag = false;
+                    //TODO: activateAireCondition()
+                }
+                else
+                {
+                    openWindowFlag = true;
+                }
+            }
+            else
+            {
+                //TODO: activateAireCondition()
+            }
+        }
+        return openWindowFlag;
     }
 
     bool openWindowCO2Control(bool openWindowFlag)
