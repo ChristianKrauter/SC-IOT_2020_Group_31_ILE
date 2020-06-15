@@ -8,6 +8,7 @@ public class Chair : MonoBehaviour
     private Transform indicator;
     private Material red_material;
     private Material green_material;
+    private Transform student;
 
     public void LockChair()
     {
@@ -23,12 +24,14 @@ public class Chair : MonoBehaviour
 
     public void OccupyChair()
     {
-        print("chair occupied");
+        student.gameObject.SetActive(true);
+        // print("chair occupied");
     }
 
     public void EmptyChair()
     {
-        print("chair emptied");
+        student.gameObject.SetActive(false);
+        // print("chair emptied");
     }
 
     public void ChangeIndicator(string color = "green")
@@ -51,6 +54,8 @@ public class Chair : MonoBehaviour
         green_material = Resources.Load<Material>("Materials/green_alert");
         anim = GetComponent<Animator>();
         indicator = transform.Find("student_indicator");
+        student = transform.Find("student");
+        student.gameObject.SetActive(false);
     }
 
     public void Update()
