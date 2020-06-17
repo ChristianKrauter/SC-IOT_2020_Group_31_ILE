@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Humidity_sensor : MonoBehaviour
 {
@@ -18,34 +16,35 @@ public class Humidity_sensor : MonoBehaviour
         if (inside)
         {
             sensorFamily = sensorType + "_inside";
-        } else
+        }
+        else
         {
             sensorFamily = sensorType + "_outside";
         }
-        sensorId =  this.GetHashCode();
-        sensorUpdate();
-        broker.addSensor(sensorFamily,sensorId,sensorValue);
-        
+        sensorId = this.GetHashCode();
+        SensorUpdate();
+        broker.AddSensor(sensorFamily, sensorId, sensorValue);
+
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
-        if(timer > 5.0f)
+        if (timer > 5.0f)
         {
             timer = 0.0f;
-            sensorUpdate();
-            sendData();
+            SensorUpdate();
+            SendData();
 
         }
     }
 
-    void sensorUpdate()
+    void SensorUpdate()
     {
         if (inside)
         {
-            sensorValue = environment.inner_humidity + Random.Range(-2.0f,2.0f);
+            sensorValue = environment.inner_humidity + Random.Range(-2.0f, 2.0f);
         }
         else
         {
@@ -53,8 +52,8 @@ public class Humidity_sensor : MonoBehaviour
         }
     }
 
-    void sendData()
+    void SendData()
     {
-        broker.sendData(sensorId, sensorValue);
+        broker.SendData(sensorId, sensorValue);
     }
 }

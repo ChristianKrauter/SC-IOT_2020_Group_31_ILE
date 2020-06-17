@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Broker : MonoBehaviour
 {
-    
+
     public float timer = 0.0f;
     ArrayList sensorFamilies = new ArrayList();
     Dictionary<string, ArrayList> sensorValues = new Dictionary<string, ArrayList>();
@@ -12,7 +12,7 @@ public class Broker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,25 +30,25 @@ public class Broker : MonoBehaviour
                     sum += f;
                 }
                 Debug.Log("Family: " + key + " / Avg: " + (sum / sensorValues[key].Count));
-        }
+            }
 
         }
-        
+
     }
 
-    public void addSensor(string sensorFamily,int sensorId,float sensorData)
+    public void AddSensor(string sensorFamily, int sensorId, float sensorData)
     {
-        if(!sensorFamilies.Contains(sensorFamily))
+        if (!sensorFamilies.Contains(sensorFamily))
         {
             sensorFamilies.Add(sensorFamily);
-            sensorValues.Add(sensorFamily,new ArrayList());
+            sensorValues.Add(sensorFamily, new ArrayList());
         }
         int sensorSlot = sensorValues[sensorFamily].Add(sensorData);
         Sensor sensor = new Sensor(sensorId, sensorFamily, sensorSlot);
         sensors.Add(sensor.id.ToString(), sensor);
     }
 
-    public void sendData (int _sensorId ,float data)
+    public void SendData(int _sensorId, float data)
     {
         Sensor sensor = sensors[_sensorId.ToString()];
         sensorValues[sensor.sensorFamily][sensor.sensorSlot] = data;

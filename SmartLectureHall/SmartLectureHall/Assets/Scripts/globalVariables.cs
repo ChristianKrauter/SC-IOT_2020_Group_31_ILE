@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GlobalVariables : MonoBehaviour
 {
@@ -15,10 +13,10 @@ public class GlobalVariables : MonoBehaviour
 
     // max 266
     public int numberOfStudents = 50;
-    public GameObject chair_rows;
-    public float refreshTime = 5.0f;
+    public GameObject seat_rows;
+    public float refreshTime = 50.0f;
     private float timer = 0.0f;
-    private readonly Chair[,] chairs = new Chair[19,14];
+    private readonly Chair[,] chairs = new Chair[19, 14];
 
     // Ventilation
     public bool ventilating = false;
@@ -27,10 +25,10 @@ public class GlobalVariables : MonoBehaviour
     {
         for (int i = 0; i < 19; i++)
         {
-            var row = chair_rows.gameObject.transform.GetChild(i);
+            var row = seat_rows.gameObject.transform.GetChild(i);
             for (int j = 0; j < 14; j++)
             {
-                chairs[i,j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
+                chairs[i, j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
             }
         }
     }
@@ -60,7 +58,7 @@ public class GlobalVariables : MonoBehaviour
         {
             inner_base_temperature -= 0.1f;
         }
-        
+
         // Humidity
         if (inner_humidity < outer_humidity)
         {
@@ -82,8 +80,9 @@ public class GlobalVariables : MonoBehaviour
         }
     }
 
-private void DistributeStudents()
+    private void DistributeStudents()
     {
+        print("Distribute Students");
         // Reset
         for (int i = 0; i < 19; i++)
         {
