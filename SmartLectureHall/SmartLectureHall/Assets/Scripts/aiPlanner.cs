@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
 {
+    public Window window;
+    public Window window2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +17,12 @@ public class AiPlanner : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void OpenWindows()
+    {
+        window.Open();
+        window2.Open();
     }
 
     void openWindowControl()
@@ -32,6 +41,7 @@ public class AiPlanner : MonoBehaviour
                 if (isWindowOpen)
                 {
                     //TODO: openWindow();
+                    OpenWindows();
                     //TODO: activateAireCondition()
                 }
                 else {

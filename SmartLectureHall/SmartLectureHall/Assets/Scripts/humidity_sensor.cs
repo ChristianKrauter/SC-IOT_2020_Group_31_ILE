@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class humidity_sensor : MonoBehaviour
+public class Humidity_sensor : MonoBehaviour
 {
     public Broker broker;
     public GlobalVariables environment;

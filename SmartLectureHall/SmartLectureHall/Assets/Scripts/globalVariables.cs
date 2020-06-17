@@ -20,6 +20,9 @@ public class GlobalVariables : MonoBehaviour
     private float timer = 0.0f;
     private readonly Chair[,] chairs = new Chair[19,14];
 
+    // Ventilation
+    public bool ventilating = false;
+
     public void Start()
     {
         for (int i = 0; i < 19; i++)
@@ -39,10 +42,47 @@ public class GlobalVariables : MonoBehaviour
         {
             timer = 0;
             DistributeStudents();
+            if (ventilating)
+            {
+                Ventilate();
+            }
         }
     }
 
-    private void DistributeStudents()
+    private void Ventilate()
+    {
+        // Temperature
+        if (inner_base_temperature < outer_temperature)
+        {
+            inner_base_temperature += 0.1f;
+        }
+        else if (inner_base_temperature > outer_temperature)
+        {
+            inner_base_temperature -= 0.1f;
+        }
+        
+        // Humidity
+        if (inner_humidity < outer_humidity)
+        {
+            inner_humidity += 0.1f;
+        }
+        else if (inner_humidity > outer_humidity)
+        {
+            inner_humidity -= 0.1f;
+        }
+
+        // CO2
+        if (inner_base_temperature < outer_co2)
+        {
+            inner_co2 += 0.1f;
+        }
+        else if (inner_base_temperature > outer_co2)
+        {
+            inner_co2 -= 0.1f;
+        }
+    }
+
+private void DistributeStudents()
     {
         // Reset
         for (int i = 0; i < 19; i++)
