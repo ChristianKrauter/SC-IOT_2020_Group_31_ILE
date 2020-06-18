@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Broker : MonoBehaviour
 {
-
+    //TODO Do everything
     public float timer = 0.0f;
     ArrayList sensorFamilies = new ArrayList();
     Dictionary<string, ArrayList> sensorValues = new Dictionary<string, ArrayList>();

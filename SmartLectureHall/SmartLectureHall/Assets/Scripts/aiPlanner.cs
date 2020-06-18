@@ -71,8 +71,12 @@ public class AiPlanner : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > 5)
         {
+            print("hi");
+            OpenWindowControl();
+            print("ho");
             timer = 0;
             ApplySeatingPlan();
+            
         }
     }
 
@@ -142,34 +146,34 @@ public class AiPlanner : MonoBehaviour
     {
         bool openWindowFlag;
 
-        while (true)
-        {
-            openWindowFlag = true;
-            openWindowFlag = OpenWindowTemperatureControl(openWindowFlag);
-            openWindowFlag = OpenWindowHumidityControl(openWindowFlag);
-            openWindowFlag = OpenWindowCO2Control(openWindowFlag);
+        
+        openWindowFlag = true;
+        openWindowFlag = OpenWindowTemperatureControl(openWindowFlag);
+        openWindowFlag = OpenWindowHumidityControl(openWindowFlag);
+        openWindowFlag = OpenWindowCO2Control(openWindowFlag);
 
-            if (openWindowFlag)
+        if (openWindowFlag)
+        {
+            if (isWindowOpen)
             {
-                if (isWindowOpen)
-                {
-                    //OpenWindows(); // if it is open we dont have to open it.
-                    ActivateAirCondition();
-                }
-                else
-                {
-                    OpenWindows();
-                }
+                //OpenWindows(); // if it is open we dont have to open it.
+                ActivateAirCondition();
             }
             else
             {
-                ColoseWindows();
+                OpenWindows();
             }
         }
+        else
+        {
+            ColoseWindows();
+        }
+        
     }
 
     bool OpenWindowTemperatureControl(bool openWindowFlag)
     {
+        //TODO GetData form Broker
         float Temp_IN = glob.inner_base_temperature;
         float Temp_OUT = glob.outer_temperature;
 
@@ -197,6 +201,7 @@ public class AiPlanner : MonoBehaviour
 
     bool OpenWindowHumidityControl(bool openWindowFlag)
     {
+        //TODO GetData form Broker
         float Humidity_IN = glob.inner_humidity;
         float Humidity_OUT = glob.outer_humidity;
 
@@ -224,6 +229,7 @@ public class AiPlanner : MonoBehaviour
 
     bool OpenWindowCO2Control(bool openWindowFlag)
     {
+        //TODO GetData form Broker
         float CO2_IN = glob.inner_co2;
         float CO2_OUT = glob.outer_co2;
 

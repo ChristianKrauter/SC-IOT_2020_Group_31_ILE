@@ -44,6 +44,12 @@ public class Chair : MonoBehaviour
         // print("chair emptied");
     }
 
+    public bool GetLockStatus()
+    {
+        //return(indicator.GetComponent<Renderer>().material == green_material);
+        return true;
+    }
+
     public void ChangeIndicator(string color = "green")
     {
         Renderer meshRenderer = indicator.GetComponent<Renderer>();

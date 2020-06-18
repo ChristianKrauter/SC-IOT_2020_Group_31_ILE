@@ -95,8 +95,15 @@ public class GlobalVariables : MonoBehaviour
         // Assign randomly
         for (int i = 0; i < numberOfStudents; i++)
         {
-            var rowNumber = Random.Range(0, 19);
-            var chairNumber = Random.Range(0, 14);
+            var chairNumber = 0;
+            var rowNumber = 0;
+            bool freeSeat = false;
+            while (!freeSeat)
+            {
+                rowNumber = Random.Range(0, 19);
+                chairNumber = Random.Range(0, 14);
+                freeSeat = chairs[rowNumber, chairNumber].GetLockStatus();
+            }
             chairs[rowNumber, chairNumber].OccupyChair();
         }
     }
