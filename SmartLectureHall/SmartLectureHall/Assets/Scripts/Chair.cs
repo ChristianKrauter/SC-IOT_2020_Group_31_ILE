@@ -8,6 +8,7 @@ public class Chair : MonoBehaviour
     private Material green_material;
     private Material orange_material;
     private Transform student;
+    public Broker broker;
 
     public void LockChair()
     {

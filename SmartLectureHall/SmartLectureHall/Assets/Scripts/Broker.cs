@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ public class Broker : MonoBehaviour
     ArrayList sensorFamilies = new ArrayList();
     Dictionary<string, ArrayList> sensorValues = new Dictionary<string, ArrayList>();
     Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
+    float temperature;
+    float humidity;
+    float CO2;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,21 +22,7 @@ public class Broker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > 10.0f)
-        {
-            timer = 0;
-            foreach (string key in sensorValues.Keys)
-            {
-                float sum = 0.0f;
-                foreach (float f in sensorValues[key])
-                {
-                    sum += f;
-                }
-                Debug.Log("Family: " + key + " / Avg: " + (sum / sensorValues[key].Count));
-            }
-
-        }
+        
 
     }
 
@@ -67,5 +57,98 @@ public class Broker : MonoBehaviour
             sensorFamily = _sensorFamily;
             sensorSlot = _sensorSlot;
         }
+    }
+
+    public float GetHumidityInside()
+    {
+        if (sensorFamilies.Contains("humidity_inside"))
+        {
+            float value = 0;
+            for (int i=0; i < sensorValues["humidity_inside"].Count; i ++)
+            {
+                value += Convert.ToSingle(sensorValues["humidity_inside"][i]);
+            }
+            return value / sensorValues["humidity_inside"].Count;
+        }
+
+        return -267.0f;
+    }
+
+    public float GetHumidityOutside()
+    {
+        if (sensorFamilies.Contains("humidity_outside"))
+        {
+            float value = 0;
+            for (int i = 0; i < sensorValues["humidity_outside"].Count; i++)
+            {
+                value += Convert.ToSingle(sensorValues["humidity_outside"][i]);
+            }
+            return value / sensorValues["humidity_outside"].Count;
+        }
+        return -267.0f;
+    }
+
+    public float GetTemperatureInside()
+    {
+        if (sensorFamilies.Contains("temperature_inside"))
+        {
+            float value = 0;
+            for (int i = 0; i < sensorValues["temperature_inside"].Count; i++)
+            {
+                value += Convert.ToSingle(sensorValues["temperature_inside"][i]);
+            }
+            return value / sensorValues["temperature_inside"].Count;
+        }
+        return -267.0f;
+    }
+
+    public float GetTemperatureOutside()
+    {
+        if (sensorFamilies.Contains("temperature_outside"))
+        {
+            float value = 0;
+            for (int i = 0; i < sensorValues["temperature_outside"].Count; i++)
+            {
+                value += Convert.ToSingle(sensorValues["temperature_outside"][i]);
+            }
+            return value / sensorValues["temperature_outside"].Count;
+        }
+
+        return -267.0f;
+    }
+
+    public float GetCO2Inside()
+    {
+        if (sensorFamilies.Contains("CO2_inside"))
+        {
+            float value = 0;
+            for (int i = 0; i < sensorValues["CO2_inside"].Count; i++)
+            {
+                value += Convert.ToSingle(sensorValues["CO2_inside"][i]);
+            }
+            return value / sensorValues["CO2_inside"].Count;
+        }
+
+        return -267.0f;
+    }
+
+    public float GetCO2Outside()
+    {
+        if (sensorFamilies.Contains("CO2_outside"))
+        {
+            float value = 0;
+            for (int i = 0; i < sensorValues["CO2_outside"].Count; i++)
+            {
+                value += Convert.ToSingle(sensorValues["CO2_outside"][i]);
+            }
+            return value / sensorValues["CO2_outside"].Count;
+        }
+
+        return -267.0f;
+    }
+
+    public bool GetSeatOccupancy()
+    {
+        return true;
     }
 }
