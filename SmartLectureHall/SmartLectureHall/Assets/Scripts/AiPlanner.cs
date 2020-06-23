@@ -9,8 +9,11 @@ public class AiPlanner : MonoBehaviour
     public Window window2;
     public GlobalVariables glob;
     public AirConditioning airCon;
+    public AirConditioning airCon2;
+    public AirConditioning airCon3;
+    public AirConditioning airCon4;
 
-    public float wantedTemperature = 20.5f; // centigrade
+    public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 0.55f; // humidity in % at the desired temperature
     public float wantedCO2 = 0.5f; // CO2 
 
@@ -139,7 +142,10 @@ public class AiPlanner : MonoBehaviour
 
     void ActivateAirCondition()
     {
-        airCon.TurnOn((int)wantedTemperature);
+        airCon.TurnOn(wantedTemperature);
+        airCon2.TurnOn(wantedTemperature);
+        airCon3.TurnOn(wantedTemperature);
+        airCon4.TurnOn(wantedTemperature);
     }
 
     void OpenWindowControl()

@@ -19,7 +19,10 @@ public class GlobalVariables : MonoBehaviour
     private readonly Chair[,] chairs = new Chair[19, 14];
 
     // Ventilation
+    // Ventilation & airconditioning
     public bool ventilating = false;
+    public bool airConditioning = false;
+    public float airConditioningTemp = 0f;
 
     public void Start()
     {
@@ -44,6 +47,23 @@ public class GlobalVariables : MonoBehaviour
             {
                 Ventilate();
             }
+            if (airConditioning)
+            {
+                RunAirConditioning(airConditioningTemp);
+            }
+        }
+    }
+
+    private void RunAirConditioning(float goalTemp)
+    {
+        // Temperature
+        if (inner_base_temperature < goalTemp)
+        {
+            inner_base_temperature += 1f;
+        }
+        else if (inner_base_temperature > goalTemp)
+        {
+            inner_base_temperature -= 1f;
         }
     }
 
