@@ -7,11 +7,14 @@ public class Chair : MonoBehaviour
     private Material red_material;
     private Material green_material;
     private Material orange_material;
+    [HideInInspector]
+    public bool isLocked;
     private Transform student;
     public Broker broker;
 
     public void LockChair()
     {
+        this.isLocked = true;
         if (student.gameObject.activeSelf == true)
         {
             ChangeIndicator("orange");
@@ -27,6 +30,7 @@ public class Chair : MonoBehaviour
 
     public void UnlockChair()
     {
+        this.isLocked = false;
         anim.ResetTrigger("lock");
         ChangeIndicator("green");
         anim.SetTrigger("unlock");

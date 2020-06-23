@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
 {
+    public GlobalVariables glob;
     public Window window;
     public Window window2;
-    public GlobalVariables glob;
     public AirConditioning airCon;
     public AirConditioning airCon2;
     public AirConditioning airCon3;
@@ -23,15 +23,14 @@ public class AiPlanner : MonoBehaviour
     private readonly Chair[,] chairs = new Chair[19, 14];
     private float timer = 0.0f;
 
+    [Header("exam, pandemic")]
+    [Header("smallClass, mcTest")]
+    [Header("standard, frontHalf")]
+    [Header("Available seating plans:")]
+    public string seatingPlan = "standard";
+
     // Placeholder to quickly create new seating Plans
-    /*private static int[,] currentSeatingPlan = new int[19, 14] {
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    /*private static readonly int[,] newSeatingPlan = new int[19, 14] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -43,12 +42,21 @@ public class AiPlanner : MonoBehaviour
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };*/
 
     // Start is called before the first frame update
     void Start()
     {
+        //Serialize(newSeatingPlan, "Assets/SeatingPlans/smallclass.sp");
+
         for (int i = 0; i < 19; i++)
         {
             var row = seat_rows.gameObject.transform.GetChild(i);
@@ -57,7 +65,7 @@ public class AiPlanner : MonoBehaviour
                 chairs[i, j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
             }
         }
-        currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/frontHalf.osl");
+        currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + seatingPlan + ".sp");
         StartCoroutine(WaitForLoading());
     }
 
@@ -78,9 +86,15 @@ public class AiPlanner : MonoBehaviour
             OpenWindowControl();
             print("ho");
             timer = 0;
-            ApplySeatingPlan();
+            UpdateSeatingDisplay();
+            //ApplySeatingPlan();
             
         }
+    }
+
+    void UpdateSeatingDisplay()
+    {
+
     }
 
     void ApplySeatingPlan()

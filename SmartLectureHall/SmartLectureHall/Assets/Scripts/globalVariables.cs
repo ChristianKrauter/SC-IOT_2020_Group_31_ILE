@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GlobalVariables : MonoBehaviour
 {
@@ -12,13 +13,13 @@ public class GlobalVariables : MonoBehaviour
     public float inner_co2 = 10.0f;
 
     // max 266
+    [Range(0,266)]
     public int numberOfStudents = 50;
     public GameObject seat_rows;
     public float refreshTime = 50.0f;
     private float timer = 0.0f;
     private readonly Chair[,] chairs = new Chair[19, 14];
 
-    // Ventilation
     // Ventilation & airconditioning
     public bool ventilating = false;
     public bool airConditioning = false;
@@ -102,6 +103,7 @@ public class GlobalVariables : MonoBehaviour
 
     private void DistributeStudents()
     {
+        List<Chair> availableChairs = new List<Chair>();
         print("Distribute Students");
         // Reset
         for (int i = 0; i < 19; i++)
@@ -109,22 +111,23 @@ public class GlobalVariables : MonoBehaviour
             for (int j = 0; j < 14; j++)
             {
                 chairs[i, j].EmptyChair();
+                if (!chairs[i,j].isLocked)
+                {
+                    availableChairs.Add(chairs[i, j]);
+                }
             }
         }
 
         // Assign randomly
         for (int i = 0; i < numberOfStudents; i++)
         {
-            var chairNumber = 0;
-            var rowNumber = 0;
-            bool freeSeat = false;
-            while (!freeSeat)
+            if (availableChairs.Count == 0)
             {
-                rowNumber = Random.Range(0, 19);
-                chairNumber = Random.Range(0, 14);
-                freeSeat = chairs[rowNumber, chairNumber].GetLockStatus();
+                break;
             }
-            chairs[rowNumber, chairNumber].OccupyChair();
+            var index = Random.Range(0, availableChairs.Count - 1);
+            availableChairs[index].OccupyChair();
+            availableChairs.RemoveAt(index);
         }
     }
 }
