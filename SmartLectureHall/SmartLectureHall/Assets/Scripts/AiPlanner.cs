@@ -33,6 +33,8 @@ public class AiPlanner : MonoBehaviour
     public string seatingPlan = "standard";
 
     public Broker broker;
+    private bool[,] occupancie;
+
     // Placeholder to quickly create new seating Plans
     /*private static readonly int[,] newSeatingPlan = new int[19, 14] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -104,12 +106,13 @@ public class AiPlanner : MonoBehaviour
     void UpdateSeatingDisplay()
     {
         print("Update display");
+        occupancie = broker.GetSeatOccupancy();
         for (int i = 0; i < 19; i++)
         {
             for (int j = 0; j < 14; j++)
             {
-                // Todo get occupation status from broker
-                if (chairs[i,j].isLocked || chairs[i,j].isOccupied)
+                // Todo get occupation status from broker / Solved?
+                if (chairs[i,j].isLocked || !occupancie[i,j])
                 {
                     displayLEDs[i, j].ChangeColor("red");
                 }
