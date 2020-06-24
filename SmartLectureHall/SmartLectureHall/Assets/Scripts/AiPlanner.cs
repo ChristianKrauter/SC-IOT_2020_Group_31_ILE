@@ -32,6 +32,7 @@ public class AiPlanner : MonoBehaviour
     [Header("Available seating plans:")]
     public string seatingPlan = "standard";
 
+    public Broker broker;
     // Placeholder to quickly create new seating Plans
     /*private static readonly int[,] newSeatingPlan = new int[19, 14] {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
