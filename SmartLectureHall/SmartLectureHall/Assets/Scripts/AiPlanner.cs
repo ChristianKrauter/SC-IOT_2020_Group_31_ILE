@@ -219,7 +219,8 @@ public class AiPlanner : MonoBehaviour
     bool OpenWindowTemperatureControl(bool openWindowFlag)
     {
         //TODO GetData form Broker
-        float Temp_IN = glob.inner_base_temperature;
+        float Temp_IN = broker.GetTemperatureInside();
+        //float Temp_IN = glob.inner_base_temperature;
         float Temp_OUT = glob.outer_temperature;
 
         if (Temp_IN != Temp_OUT)
