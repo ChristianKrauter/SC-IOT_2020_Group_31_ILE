@@ -12,7 +12,7 @@ public class Led : MonoBehaviour
         {
             meshRenderer.material = green_material;
         }
-        else
+        else if (color == "red")
         {
             meshRenderer.material = red_material;
         }

@@ -16,12 +16,15 @@ public class AiPlanner : MonoBehaviour
     public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 0.55f; // humidity in % at the desired temperature
     public float wantedCO2 = 0.5f; // CO2 
+    private float timer = 0.0f;
 
     public GameObject seat_rows;
     private bool isWindowOpen = false;
     private int[,] currentSeatingPlan;
     private readonly Chair[,] chairs = new Chair[19, 14];
-    private float timer = 0.0f;
+    
+    public SeatDisplay display;
+    private readonly Led[,] displayLEDs = new Led[19, 14];
 
     [Header("exam, pandemic")]
     [Header("smallClass, mcTest")]
@@ -56,13 +59,18 @@ public class AiPlanner : MonoBehaviour
     void Start()
     {
         //Serialize(newSeatingPlan, "Assets/SeatingPlans/smallclass.sp");
+        var ledRows = display.gameObject.transform.Find("LEDs");
+        var seatRows = seat_rows.gameObject.transform;
 
         for (int i = 0; i < 19; i++)
         {
-            var row = seat_rows.gameObject.transform.GetChild(i);
+            var seatRow = seatRows.GetChild(i);
+            var ledRow = ledRows.GetChild(i);
+
             for (int j = 0; j < 14; j++)
             {
-                chairs[i, j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
+                chairs[i, j] = seatRow.gameObject.transform.GetChild(j).GetComponent<Chair>();
+                displayLEDs[i, j] = ledRow.gameObject.transform.GetChild(j).GetComponent<Led>();
             }
         }
         currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + seatingPlan + ".sp");
@@ -82,9 +90,9 @@ public class AiPlanner : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > 5)
         {
-            print("hi");
+            // print("hi");
             OpenWindowControl();
-            print("ho");
+            // print("ho");
             timer = 0;
             UpdateSeatingDisplay();
             //ApplySeatingPlan();
@@ -94,6 +102,22 @@ public class AiPlanner : MonoBehaviour
 
     void UpdateSeatingDisplay()
     {
+        print("Update display");
+        for (int i = 0; i < 19; i++)
+        {
+            for (int j = 0; j < 14; j++)
+            {
+                // Todo get occupation status from broker
+                if (chairs[i,j].isLocked || chairs[i,j].isOccupied)
+                {
+                    displayLEDs[i, j].ChangeColor("red");
+                }
+                else
+                {
+                    displayLEDs[i, j].ChangeColor("green");
+                }
+            }
+        }
 
     }
 

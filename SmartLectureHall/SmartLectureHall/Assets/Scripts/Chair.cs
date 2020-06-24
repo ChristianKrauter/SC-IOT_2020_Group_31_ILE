@@ -9,6 +9,8 @@ public class Chair : MonoBehaviour
     private Material orange_material;
     [HideInInspector]
     public bool isLocked;
+    [HideInInspector]
+    public bool isOccupied;
     private Transform student;
     public Broker broker;
 
@@ -39,12 +41,14 @@ public class Chair : MonoBehaviour
 
     public void OccupyChair()
     {
+        isOccupied = true;
         student.gameObject.SetActive(true);
         // print("chair occupied");
     }
 
     public void EmptyChair()
     {
+        isOccupied = false;
         student.gameObject.SetActive(false);
         // print("chair emptied");
     }
