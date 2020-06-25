@@ -46,11 +46,11 @@ public class CO2_sensor : MonoBehaviour
     {
         if (inside)
         {
-            sensorValue = environment.inner_co2 + Random.Range(-2.0f, 2.0f);
+            sensorValue = environment.inner_co2 + Random.Range(-0.5f, 0.5f);
         }
         else
         {
-            sensorValue = environment.outer_co2 + Random.Range(-2.0f, 2.0f);
+            sensorValue = environment.outer_co2 + Random.Range(-0.5f, 0.5f);
         }
     }
 

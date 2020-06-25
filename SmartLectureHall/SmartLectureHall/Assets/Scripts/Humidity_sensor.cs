@@ -44,11 +44,11 @@ public class Humidity_sensor : MonoBehaviour
     {
         if (inside)
         {
-            sensorValue = environment.inner_humidity + Random.Range(-2.0f, 2.0f);
+            sensorValue = environment.inner_humidity + Random.Range(-0.5f, 0.5f);
         }
         else
         {
-            sensorValue = environment.outer_humidity + Random.Range(-2.0f, 2.0f);
+            sensorValue = environment.outer_humidity + Random.Range(-0.5f, 0.5f);
         }
     }
 
