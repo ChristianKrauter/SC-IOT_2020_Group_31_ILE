@@ -10,6 +10,7 @@ public class Window : MonoBehaviour
         anim.SetTrigger("open");
         print("window opened");
         glob.ventilating = true;
+        anim.ResetTrigger("close");
     }
 
     public void Close()
@@ -17,6 +18,7 @@ public class Window : MonoBehaviour
         anim.SetTrigger("close");
         print("window closed");
         glob.ventilating = false;
+        anim.ResetTrigger("open");
     }
 
     public void Update()

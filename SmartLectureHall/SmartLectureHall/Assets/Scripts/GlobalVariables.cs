@@ -60,11 +60,11 @@ public class GlobalVariables : MonoBehaviour
         // Temperature
         if (inner_base_temperature < goalTemp)
         {
-            inner_base_temperature += 1f;
+            inner_base_temperature += 0.5f;
         }
         else if (inner_base_temperature > goalTemp)
         {
-            inner_base_temperature -= 1f;
+            inner_base_temperature -= 0.5f;
         }
     }
 
