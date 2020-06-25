@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
 {
-    public GlobalVariables glob;
     public Window window;
     public Window window2;
     public AirConditioning airCon;
@@ -91,15 +90,16 @@ public class AiPlanner : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 5)
+        if (timer > 10)
         {
             // print("hi");
             OpenWindowControl();
             // print("ho");
-            timer = 0;
+            
             UpdateSeatingDisplay();
             //ApplySeatingPlan();
-            
+
+            timer = 0;
         }
     }
 
@@ -221,23 +221,26 @@ public class AiPlanner : MonoBehaviour
 
     bool OpenWindowTemperatureControl(bool openWindowFlag)
     {
-        //TODO GetData form Broker
+
         float Temp_IN = broker.GetTemperatureInside();
-        //float Temp_IN = glob.inner_base_temperature;
-        float Temp_OUT = glob.outer_temperature;
+        float Temp_OUT = broker.GetTemperatureOutside();
 
         if (Temp_IN != Temp_OUT)
         {
             if (openWindowFlag)
             {
-                if (wantedTemperature > Temp_IN && Temp_IN > Temp_OUT)
+                print("Temp_OUT: " + Temp_OUT + " Temp_IN " + Temp_IN + " wantedTemp " + wantedTemperature);
+                if ( (wantedTemperature > Temp_IN && Temp_IN > Temp_OUT) /*too cold outside*/ || (Temp_OUT > Temp_IN && Temp_IN > wantedTemperature) /*too hot outside*/ )
                 {
+                    //deteriorating conditions
                     openWindowFlag = false;
                     ActivateAirCondition();
+                    print("Temp_worse openWindow? " + openWindowFlag);
                 }
                 else
                 {
-                    openWindowFlag = true;
+                    //openWindowFlag = true;
+                    print("Temp_not_worse openWindow? " + openWindowFlag);
                 }
             }
             else
@@ -245,21 +248,22 @@ public class AiPlanner : MonoBehaviour
                 ActivateAirCondition();
             }
         }
+        print("Temp openWindow? " + openWindowFlag);
         return openWindowFlag;
     }
 
     bool OpenWindowHumidityControl(bool openWindowFlag)
     {
-        //TODO GetData form Broker
-        float Humidity_IN = glob.inner_humidity;
-        float Humidity_OUT = glob.outer_humidity;
+        float Humidity_IN = broker.GetHumidityInside();
+        float Humidity_OUT = broker.GetHumidityOutside();
 
         if (Humidity_IN != Humidity_OUT)
         {
             if (openWindowFlag)
             {
-                if (wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT)
+                if ( (wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT) /*too dry air outside*/ || (Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity) /*too hazy outside*/)
                 {
+                    //deteriorating conditions
                     openWindowFlag = false;
                     ActivateAirCondition();
                 }
@@ -273,21 +277,22 @@ public class AiPlanner : MonoBehaviour
                 ActivateAirCondition();
             }
         }
+        print("Humidity openWindow?" + openWindowFlag);
         return openWindowFlag;
     }
 
     bool OpenWindowCO2Control(bool openWindowFlag)
     {
-        //TODO GetData form Broker
-        float CO2_IN = glob.inner_co2;
-        float CO2_OUT = glob.outer_co2;
+        float CO2_IN = broker.GetCO2Inside();
+        float CO2_OUT = broker.GetCO2Outside();
 
         if (CO2_IN != CO2_OUT)
         {
             if (openWindowFlag)
             {
-                if (wantedCO2 > CO2_IN && CO2_IN > CO2_OUT)
+                if ( (wantedCO2 > CO2_IN && CO2_IN > CO2_OUT) /*not stuffy enough air outside*/ || (CO2_OUT > CO2_IN && CO2_IN > wantedCO2) /*too stuffy air outside*/)
                 {
+                    //deteriorating conditions
                     openWindowFlag = false;
                     ActivateAirCondition();
                 }
@@ -301,6 +306,7 @@ public class AiPlanner : MonoBehaviour
                 ActivateAirCondition();
             }
         }
+        print("CO2 openWindow?" + openWindowFlag);
         return openWindowFlag;
     }
 
