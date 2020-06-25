@@ -13,12 +13,20 @@ public class AiPlanner : MonoBehaviour
     public AirConditioning airCon4;
 
     public float wantedTemperature = 20f; // centigrade
-    public float wantedHumidity = 0.55f; // humidity in % at the desired temperature
+    public float wantedHumidity = 0.45f; // humidity in % at the desired temperature
     public float wantedCO2 = 0.5f; // CO2 
     private float timer = 0.0f;
 
     public GameObject seat_rows;
     private bool isWindowOpen = false;
+
+    private bool avtivateAirConditionFlag =false;
+    private bool openWindowFlag = true;
+
+    public float temperatureTolerance = 0.5f;
+    public float humidityTolerance = 1/4 /100; // 0.25%
+    public float CO2Tolerance = 1/10/100; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
+
     private int[,] currentSeatingPlan;
     private readonly Chair[,] chairs = new Chair[19, 14];
     
@@ -90,14 +98,11 @@ public class AiPlanner : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 10)
+        if (timer > 30)
         {
-            // print("hi");
-            OpenWindowControl();
-            // print("ho");
-            
+            OpenWindowControl();            
             UpdateSeatingDisplay();
-            //ApplySeatingPlan();
+            ApplySeatingPlan();
 
             timer = 0;
         }
@@ -111,7 +116,6 @@ public class AiPlanner : MonoBehaviour
         {
             for (int j = 0; j < 14; j++)
             {
-                // Todo get occupation status from broker / Solved?
                 if (chairs[i,j].isLocked || !occupancie[i,j])
                 {
                     displayLEDs[i, j].ChangeColor("red");
@@ -190,17 +194,23 @@ public class AiPlanner : MonoBehaviour
         airCon4.TurnOn(wantedTemperature);
     }
 
-    void OpenWindowControl()
+    void DeactivateAirCondition()
     {
-        bool openWindowFlag;
+        airCon.TurnOff();
+        airCon2.TurnOff();
+        airCon3.TurnOff();
+        airCon4.TurnOff();
+    }
 
-        
-        openWindowFlag = true;
-        openWindowFlag = OpenWindowTemperatureControl(openWindowFlag);
-        openWindowFlag = OpenWindowHumidityControl(openWindowFlag);
-        openWindowFlag = OpenWindowCO2Control(openWindowFlag);
+    void OpenWindowControl() // überarbeiten für aircondition deaktivierung
+    {        
+        this.openWindowFlag = true;
+        this.avtivateAirConditionFlag = false;
+        OpenWindowTemperatureControl();
+        OpenWindowHumidityControl();
+        OpenWindowCO2Control();
 
-        if (openWindowFlag)
+        if (this.openWindowFlag)
         {
             if (isWindowOpen)
             {
@@ -215,99 +225,98 @@ public class AiPlanner : MonoBehaviour
         else
         {
             ColoseWindows();
+
+            if (this.avtivateAirConditionFlag)
+            {
+                DeactivateAirCondition();
+            }
         }
         
     }
 
-    bool OpenWindowTemperatureControl(bool openWindowFlag)
+    void OpenWindowTemperatureControl()
     {
 
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
+        //TODO Toleranz berücksichtigen
         if (Temp_IN != Temp_OUT)
         {
-            if (openWindowFlag)
+            if (this.openWindowFlag)
             {
-                print("Temp_OUT: " + Temp_OUT + " Temp_IN " + Temp_IN + " wantedTemp " + wantedTemperature);
                 if ( (wantedTemperature > Temp_IN && Temp_IN > Temp_OUT) /*too cold outside*/ || (Temp_OUT > Temp_IN && Temp_IN > wantedTemperature) /*too hot outside*/ )
                 {
                     //deteriorating conditions
-                    openWindowFlag = false;
-                    ActivateAirCondition();
-                    print("Temp_worse openWindow? " + openWindowFlag);
+                    this.openWindowFlag = false;
+                    this.avtivateAirConditionFlag = true;
                 }
                 else
                 {
-                    //openWindowFlag = true;
-                    print("Temp_not_worse openWindow? " + openWindowFlag);
+                    this.openWindowFlag = true;
                 }
             }
             else
             {
-                ActivateAirCondition();
+                this.openWindowFlag = true;
             }
         }
-        print("Temp openWindow? " + openWindowFlag);
-        return openWindowFlag;
     }
 
-    bool OpenWindowHumidityControl(bool openWindowFlag)
+    void OpenWindowHumidityControl()
     {
         float Humidity_IN = broker.GetHumidityInside();
         float Humidity_OUT = broker.GetHumidityOutside();
 
+        //TODO Toleranz berücksichtigen
         if (Humidity_IN != Humidity_OUT)
         {
-            if (openWindowFlag)
+            if (this.openWindowFlag)
             {
                 if ( (wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT) /*too dry air outside*/ || (Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity) /*too hazy outside*/)
                 {
                     //deteriorating conditions
-                    openWindowFlag = false;
-                    ActivateAirCondition();
+                    this.openWindowFlag = false;
+                    this.avtivateAirConditionFlag = true;
                 }
                 else
                 {
-                    openWindowFlag = true;
+                    this.openWindowFlag = true;
                 }
             }
             else
             {
-                ActivateAirCondition();
+                this.avtivateAirConditionFlag = true;
             }
         }
-        print("Humidity openWindow?" + openWindowFlag);
-        return openWindowFlag;
     }
 
-    bool OpenWindowCO2Control(bool openWindowFlag)
+    void OpenWindowCO2Control()
     {
         float CO2_IN = broker.GetCO2Inside();
         float CO2_OUT = broker.GetCO2Outside();
 
+        //TODO Toleranz berücksichtigen
         if (CO2_IN != CO2_OUT)
         {
-            if (openWindowFlag)
+            if (this.openWindowFlag)
             {
                 if ( (wantedCO2 > CO2_IN && CO2_IN > CO2_OUT) /*not stuffy enough air outside*/ || (CO2_OUT > CO2_IN && CO2_IN > wantedCO2) /*too stuffy air outside*/)
                 {
                     //deteriorating conditions
-                    openWindowFlag = false;
-                    ActivateAirCondition();
+                    this.openWindowFlag = false;
+                    this.avtivateAirConditionFlag = true;
                 }
                 else
                 {
-                    openWindowFlag = true;
+                    this.openWindowFlag = true;
                 }
             }
             else
             {
-                ActivateAirCondition();
+                this.avtivateAirConditionFlag = true;
             }
         }
-        print("CO2 openWindow?" + openWindowFlag);
-        return openWindowFlag;
     }
 
 
