@@ -249,8 +249,7 @@ public class AiPlanner : MonoBehaviour
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
-        //TODO Toleranz berücksichtigen
-        if (Temp_IN != Temp_OUT)
+        if (InWantedTemperatureRange(Temp_IN) && Temp_IN != Temp_OUT )
         {
             if (this.openWindowFlag)
             {
@@ -289,8 +288,7 @@ public class AiPlanner : MonoBehaviour
         float Humidity_IN = broker.GetHumidityInside();
         float Humidity_OUT = broker.GetHumidityOutside();
 
-        //TODO Toleranz berücksichtigen
-        if (Humidity_IN != Humidity_OUT)
+        if (InWantedHumidityRange(Humidity_IN) && Humidity_IN != Humidity_OUT)
         {
             if (this.openWindowFlag)
             {
@@ -329,8 +327,7 @@ public class AiPlanner : MonoBehaviour
         float CO2_IN = broker.GetCO2Inside();
         float CO2_OUT = broker.GetCO2Outside();
 
-        //TODO Toleranz berücksichtigen
-        if (CO2_IN != CO2_OUT)
+        if (InWantedCO2Range(CO2_IN) && CO2_IN != CO2_OUT)
         {
             if (this.openWindowFlag)
             {
