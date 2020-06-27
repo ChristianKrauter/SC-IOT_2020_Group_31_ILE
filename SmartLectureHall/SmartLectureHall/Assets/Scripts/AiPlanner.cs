@@ -233,6 +233,15 @@ public class AiPlanner : MonoBehaviour
         }
         
     }
+    bool InWantedTemperatureRange(float currentTemp) {
+        float minTemp = wantedTemperature - temperatureTolerance;
+        float maxTemp = wantedTemperature + temperatureTolerance;
+
+        if (currentTemp >= minTemp && currentTemp <= maxTemp) {
+            return true;
+        }
+        return false;
+    }
 
     void OpenWindowTemperatureControl()
     {
@@ -263,6 +272,18 @@ public class AiPlanner : MonoBehaviour
         }
     }
 
+    bool InWantedHumidityRange(float currentHum)
+    {
+        float minHum = wantedHumidity - humidityTolerance;
+        float maxHum = wantedHumidity + humidityTolerance;
+
+        if (currentHum >= minHum && currentHum <= maxHum)
+        {
+            return true;
+        }
+        return false;
+    }
+
     void OpenWindowHumidityControl()
     {
         float Humidity_IN = broker.GetHumidityInside();
@@ -289,6 +310,18 @@ public class AiPlanner : MonoBehaviour
                 this.avtivateAirConditionFlag = true;
             }
         }
+    }
+
+    bool InWantedCO2Range(float currentCO2)
+    {
+        float minCO2 = wantedCO2 - CO2Tolerance;
+        float maxCO2 = wantedCO2 + CO2Tolerance;
+
+        if (currentCO2 >= minCO2 && currentCO2 <= maxCO2)
+        {
+            return true;
+        }
+        return false;
     }
 
     void OpenWindowCO2Control()
