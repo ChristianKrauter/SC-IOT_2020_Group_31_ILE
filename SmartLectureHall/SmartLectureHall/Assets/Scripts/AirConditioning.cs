@@ -11,7 +11,6 @@ public class AirConditioning : MonoBehaviour
         anim.SetTrigger("on");
         env.airConditioning = true;
         env.airConditioningTemp = temp;
-        print("Turned air conditioning on to " + temp);
     }
 
     // Update is called once per frame
@@ -19,7 +18,6 @@ public class AirConditioning : MonoBehaviour
     {
         anim.SetTrigger("off");
         env.airConditioning = false;
-        print("Turned air conditioning off");
     }
 
     public void Update()

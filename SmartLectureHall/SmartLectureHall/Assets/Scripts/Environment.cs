@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Environment : MonoBehaviour
@@ -17,7 +18,9 @@ public class Environment : MonoBehaviour
     public int numberOfStudents = 50;
     public GameObject seat_rows;
     public float refreshTime = 50.0f;
+    public float studentRefreshTime = 120.0f;
     private float timer = 0.0f;
+    private float studentTimer = 0.0f;
     private readonly Chair[,] chairs = new Chair[19, 14];
 
     // Ventilation & airconditioning
@@ -35,15 +38,24 @@ public class Environment : MonoBehaviour
                 chairs[i, j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
             }
         }
+        StartCoroutine(WaitForLoading());
     }
 
+    IEnumerator WaitForLoading()
+    {
+        yield return 10;
+        DistributeStudents();
+
+    }
     private void Update()
     {
         timer += Time.deltaTime;
+        studentTimer += Time.deltaTime;
+
         if (timer > refreshTime)
         {
             timer = 0;
-            DistributeStudents();
+            StudentHeadDissipation();
             if (ventilating)
             {
                 Ventilate();
@@ -53,6 +65,17 @@ public class Environment : MonoBehaviour
                 RunAirConditioning(airConditioningTemp);
             }
         }
+
+        if (studentTimer > studentRefreshTime)
+        {
+            studentTimer = 0;
+            DistributeStudents();
+        }
+    }
+
+    private void StudentHeadDissipation()
+    {
+        inner_base_temperature += ((numberOfStudents * 120 * refreshTime) / 19288000);
     }
 
     private void RunAirConditioning(float goalTemp)

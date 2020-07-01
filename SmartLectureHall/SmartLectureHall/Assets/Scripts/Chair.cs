@@ -61,6 +61,7 @@ public class Chair : MonoBehaviour
 
     public bool GetLockStatus()
     {
+        // todo
         //return(indicator.GetComponent<Renderer>().material == green_material);
         return true;
     }
