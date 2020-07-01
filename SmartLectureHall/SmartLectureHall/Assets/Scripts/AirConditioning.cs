@@ -4,7 +4,7 @@ public class AirConditioning : MonoBehaviour
 {
     public Animator anim;
     public Environment env;
-
+    private ParticleSystem ps;
     // Start is called before the first frame update
     public void TurnOn(float temp)
     {
@@ -12,6 +12,7 @@ public class AirConditioning : MonoBehaviour
         env.airConditioning = true;
         env.airConditioningTemp = temp;
         print("Turned air conditioning on to " + temp);
+        ps.Play();
     }
 
     // Update is called once per frame
@@ -20,8 +21,13 @@ public class AirConditioning : MonoBehaviour
         anim.SetTrigger("off");
         env.airConditioning = false;
         print("Turned air conditioning off");
+        ps.Stop();
     }
-
+    public void Start()
+    {
+        ps = GetComponentInChildren<ParticleSystem>();
+        ps.Stop();
+    }
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
