@@ -3,7 +3,7 @@
 public class Humidity_sensor : MonoBehaviour
 {
     public Broker broker;
-    public GlobalVariables environment;
+    public Environment env;
     public bool inside;
     public string sensorType;
     public string sensorFamily;
@@ -44,11 +44,11 @@ public class Humidity_sensor : MonoBehaviour
     {
         if (inside)
         {
-            sensorValue = environment.inner_humidity + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.inner_humidity + Random.Range(-0.5f, 0.5f);
         }
         else
         {
-            sensorValue = environment.outer_humidity + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.outer_humidity + Random.Range(-0.5f, 0.5f);
         }
     }
 

@@ -3,14 +3,14 @@
 public class AirConditioning : MonoBehaviour
 {
     public Animator anim;
-    public GlobalVariables glob;
+    public Environment env;
 
     // Start is called before the first frame update
     public void TurnOn(float temp)
     {
         anim.SetTrigger("on");
-        glob.airConditioning = true;
-        glob.airConditioningTemp = temp;
+        env.airConditioning = true;
+        env.airConditioningTemp = temp;
         print("Turned air conditioning on to " + temp);
     }
 
@@ -18,7 +18,7 @@ public class AirConditioning : MonoBehaviour
     public void TurnOff()
     {
         anim.SetTrigger("off");
-        glob.airConditioning = false;
+        env.airConditioning = false;
         print("Turned air conditioning off");
     }
 

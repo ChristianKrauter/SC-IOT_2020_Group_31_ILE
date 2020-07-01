@@ -5,7 +5,7 @@ using UnityEngine;
 public class Temp_sensor : MonoBehaviour
 {
     public Broker broker;
-    public GlobalVariables environment;
+    public Environment env;
     public bool inside;
     public string sensorType;
     public string sensorFamily;
@@ -45,11 +45,11 @@ public class Temp_sensor : MonoBehaviour
     {
         if (inside)
         {
-            sensorValue = environment.inner_base_temperature + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.inner_base_temperature + Random.Range(-0.5f, 0.5f);
         }
         else
         {
-            sensorValue = environment.outer_temperature + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.outer_temperature + Random.Range(-0.5f, 0.5f);
         }
     }
 
