@@ -193,6 +193,7 @@ public class AiPlanner : MonoBehaviour
     void ActivateAirCondition()
     {
         print("Air conditioning activated: " + wantedTemperature);
+		
         airCon.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon2.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon3.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);

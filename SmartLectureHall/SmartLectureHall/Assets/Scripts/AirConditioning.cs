@@ -37,7 +37,7 @@ public class AirConditioning : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             anim.ResetTrigger("off");
-            TurnOn(24f);
+            TurnOn(24f, 0f, 0f); //TODO add real values for humidity and co2
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
