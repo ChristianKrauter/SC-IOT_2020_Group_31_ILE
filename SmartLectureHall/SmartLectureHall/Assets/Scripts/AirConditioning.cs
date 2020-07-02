@@ -6,7 +6,7 @@ public class AirConditioning : MonoBehaviour
     public Environment env;
     private ParticleSystem ps;
     // Start is called before the first frame update
-    public void TurnOn(float temp)
+    public void TurnOn(float temp, float hum, float co2)
     {
         anim.SetTrigger("on");
         env.airConditioning = true;

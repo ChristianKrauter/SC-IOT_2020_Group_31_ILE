@@ -14,7 +14,8 @@ public class AiPlanner : MonoBehaviour
 
     public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 0.45f; // humidity in % at the desired temperature
-    public float wantedCO2 = 0.5f; // CO2
+    public float wantedCO2 = 0.001f; // CO2
+	
     public float refreshTimer = 60.0f;
     private float timer = 0.0f;
 
@@ -24,9 +25,9 @@ public class AiPlanner : MonoBehaviour
     private bool avtivateAirConditionFlag =false;
     private bool openWindowFlag = true;
 
-    public float temperatureTolerance = 0.5f;
-    public float humidityTolerance = 1/4 /100; // 0.25%
-    public float CO2Tolerance = 1/10/100; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
+    public float temperatureTolerance = 0.5f; // in °C 
+    public float humidityTolerance = 0.0025f; // 0.25%
+    public float CO2Tolerance = 0.001f; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
 
     private int[,] currentSeatingPlan;
     private readonly Chair[,] chairs = new Chair[19, 14];
@@ -192,10 +193,10 @@ public class AiPlanner : MonoBehaviour
     void ActivateAirCondition()
     {
         print("Air conditioning activated: " + wantedTemperature);
-        airCon.TurnOn(wantedTemperature);
-        airCon2.TurnOn(wantedTemperature);
-        airCon3.TurnOn(wantedTemperature);
-        airCon4.TurnOn(wantedTemperature);
+        airCon.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
+        airCon2.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
+        airCon3.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
+        airCon4.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
     }
 
     void DeactivateAirCondition()
