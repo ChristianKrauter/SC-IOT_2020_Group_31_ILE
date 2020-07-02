@@ -14,7 +14,8 @@ public class AiPlanner : MonoBehaviour
 
     public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 0.45f; // humidity in % at the desired temperature
-    public float wantedCO2 = 0.5f; // CO2 
+    public float wantedCO2 = 0.5f; // CO2
+    public float refreshTimer = 60.0f;
     private float timer = 0.0f;
 
     public GameObject seat_rows;
@@ -98,11 +99,11 @@ public class AiPlanner : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 30)
+        if (timer > refreshTimer)
         {
             OpenWindowControl();            
-            UpdateSeatingDisplay();
             ApplySeatingPlan();
+            UpdateSeatingDisplay();
 
             timer = 0;
         }
@@ -174,13 +175,15 @@ public class AiPlanner : MonoBehaviour
 
     void OpenWindows()
     {
+        print("Windows opened");
         window.Open();
         window2.Open();
         isWindowOpen = true;
     }
 
-    void ColoseWindows()
+    void CloseWindows()
     {
+        print("Windows closed");
         window.Close();
         window2.Close();
         isWindowOpen = false;
@@ -188,6 +191,7 @@ public class AiPlanner : MonoBehaviour
 
     void ActivateAirCondition()
     {
+        print("Air conditioning activated: " + wantedTemperature);
         airCon.TurnOn(wantedTemperature);
         airCon2.TurnOn(wantedTemperature);
         airCon3.TurnOn(wantedTemperature);
@@ -196,6 +200,7 @@ public class AiPlanner : MonoBehaviour
 
     void DeactivateAirCondition()
     {
+        print("Air conditioning deactivated");
         airCon.TurnOff();
         airCon2.TurnOff();
         airCon3.TurnOff();
@@ -224,7 +229,7 @@ public class AiPlanner : MonoBehaviour
         }
         else
         {
-            ColoseWindows();
+            CloseWindows();
 
             if (this.avtivateAirConditionFlag)
             {

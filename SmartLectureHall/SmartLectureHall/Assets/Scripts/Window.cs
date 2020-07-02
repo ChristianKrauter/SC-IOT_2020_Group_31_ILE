@@ -3,21 +3,19 @@
 public class Window : MonoBehaviour
 {
     public Animator anim;
-    public GlobalVariables glob;
+    public Environment env;
 
     public void Open()
     {
         anim.SetTrigger("open");
-        print("window opened");
-        glob.ventilating = true;
+        env.ventilating = true;
         anim.ResetTrigger("close");
     }
 
     public void Close()
     {
         anim.SetTrigger("close");
-        print("window closed");
-        glob.ventilating = false;
+        env.ventilating = false;
         anim.ResetTrigger("open");
     }
 
