@@ -128,21 +128,21 @@ public class Environment : MonoBehaviour
         // Humidity
         if (inner_humidity < outer_humidity)
         {
-            inner_humidity += 0.1f;
+            inner_humidity += 0.002f;
         }
         else if (inner_humidity > outer_humidity)
         {
-            inner_humidity -= 0.1f;
+            inner_humidity -= 0.002f;
         }
 
         // CO2
         if (inner_base_temperature < outer_co2)
         {
-            inner_co2 += 0.1f;
+            inner_co2 += 0.001f;
         }
         else if (inner_base_temperature > outer_co2)
         {
-            inner_co2 -= 0.1f;
+            inner_co2 -= 0.001f;
         }
     }
 
