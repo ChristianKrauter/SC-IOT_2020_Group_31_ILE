@@ -27,6 +27,8 @@ public class Environment : MonoBehaviour
     public bool ventilating = false;
     public bool airConditioning = false;
     public float airConditioningTemp = 0f;
+    public float airConditioningHumid = 0f;
+    public float airConditioningCO2 = 0f;
 
     public void Start()
     {
@@ -62,7 +64,7 @@ public class Environment : MonoBehaviour
             }
             if (airConditioning)
             {
-                RunAirConditioning(airConditioningTemp);
+                RunAirConditioning(airConditioningTemp, airConditioningHumid , airConditioningCO2);
             }
         }
 
@@ -78,7 +80,7 @@ public class Environment : MonoBehaviour
         inner_base_temperature += ((numberOfStudents * 120 * refreshTime) / 19288000);
     }
 
-    private void RunAirConditioning(float goalTemp)
+    private void RunAirConditioning(float goalTemp, float goalHumid, float goalCO2)
     {
         // Temperature
         if (inner_base_temperature < goalTemp)
@@ -88,6 +90,26 @@ public class Environment : MonoBehaviour
         else if (inner_base_temperature > goalTemp)
         {
             inner_base_temperature -= 0.5f;
+        }
+
+        // Humidity
+        if (inner_humidity < goalHumid)
+        {
+            inner_humidity += 0.002f;
+        }
+        else if (inner_humidity > goalHumid)
+        {
+            inner_humidity -= 0.002f;
+        }
+
+        // CO2
+        if (inner_co2 < goalCO2)
+        {
+            inner_co2 += 0.001f;
+        }
+        else if (inner_co2 > goalCO2)
+        {
+            inner_co2 -= 0.001f;
         }
     }
 
