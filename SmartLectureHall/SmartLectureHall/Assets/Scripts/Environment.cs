@@ -5,7 +5,7 @@ using UnityEngine;
 public class Environment : MonoBehaviour
 {
     public float outer_temperature = 25.0f;
-    public float inner_base_temperature = 23.0f;
+    public float inner_temperature = 23.0f;
 
     public float outer_humidity = 20.0f;
     public float inner_humidity = 30.0f;
@@ -58,6 +58,7 @@ public class Environment : MonoBehaviour
         {
             timer = 0;
             StudentHeadDissipation();
+            StudentHumidityContribution();
             if (ventilating)
             {
                 Ventilate();
@@ -77,19 +78,24 @@ public class Environment : MonoBehaviour
 
     private void StudentHeadDissipation()
     {
-        inner_base_temperature += ((numberOfStudents * 120 * refreshTime) / 19288000);
+        inner_temperature += ((numberOfStudents * 120 * refreshTime) / 19288000);
+    }
+
+    private void StudentHumidityContribution()
+    {
+        inner_humidity += ((numberOfStudents * 120 * refreshTime) / 19288000);
     }
 
     private void RunAirConditioning(float goalTemp, float goalHumid, float goalCO2)
     {
         // Temperature
-        if (inner_base_temperature < goalTemp)
+        if (inner_temperature < goalTemp)
         {
-            inner_base_temperature += 0.5f;
+            inner_temperature += 0.5f;
         }
-        else if (inner_base_temperature > goalTemp)
+        else if (inner_temperature > goalTemp)
         {
-            inner_base_temperature -= 0.5f;
+            inner_temperature -= 0.5f;
         }
 
         // Humidity
@@ -116,13 +122,13 @@ public class Environment : MonoBehaviour
     private void Ventilate()
     {
         // Temperature
-        if (inner_base_temperature < outer_temperature)
+        if (inner_temperature < outer_temperature)
         {
-            inner_base_temperature += 0.1f;
+            inner_temperature += 0.1f;
         }
-        else if (inner_base_temperature > outer_temperature)
+        else if (inner_temperature > outer_temperature)
         {
-            inner_base_temperature -= 0.1f;
+            inner_temperature -= 0.1f;
         }
 
         // Humidity
@@ -136,11 +142,11 @@ public class Environment : MonoBehaviour
         }
 
         // CO2
-        if (inner_base_temperature < outer_co2)
+        if (inner_temperature < outer_co2)
         {
             inner_co2 += 0.001f;
         }
-        else if (inner_base_temperature > outer_co2)
+        else if (inner_temperature > outer_co2)
         {
             inner_co2 -= 0.001f;
         }

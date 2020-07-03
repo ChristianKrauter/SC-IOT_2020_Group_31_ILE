@@ -45,7 +45,7 @@ public class Temp_sensor : MonoBehaviour
     {
         if (inside)
         {
-            sensorValue = env.inner_base_temperature + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.inner_temperature + Random.Range(-0.5f, 0.5f);
         }
         else
         {
