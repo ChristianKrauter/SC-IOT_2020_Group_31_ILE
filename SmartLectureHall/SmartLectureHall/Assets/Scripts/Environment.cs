@@ -22,6 +22,8 @@ public class Environment : MonoBehaviour
     private float timer = 0.0f;
     private float studentTimer = 0.0f;
     private readonly Chair[,] chairs = new Chair[19, 14];
+    private float cO2Timer = 0.0f;
+    private float cO2UpdateRate = 3600.0f;
 
     // Ventilation & airconditioning
     public bool ventilating = false;
@@ -49,10 +51,12 @@ public class Environment : MonoBehaviour
         DistributeStudents();
 
     }
+
     private void Update()
     {
         timer += Time.deltaTime;
         studentTimer += Time.deltaTime;
+        CO2Timer += Time.deltaTime;
 
         if (timer > refreshTime)
         {
@@ -74,6 +78,12 @@ public class Environment : MonoBehaviour
             studentTimer = 0;
             DistributeStudents();
         }
+
+        if (cO2Timer > cO2UpdateRate)
+        {
+            cO2Timer = 0;
+            StudentCO2Contribution();
+        }
     }
 
     private void StudentHeadDissipation()
@@ -83,7 +93,12 @@ public class Environment : MonoBehaviour
 
     private void StudentHumidityContribution()
     {
-        inner_humidity += ((numberOfStudents * 120 * refreshTime) / 19288000);
+        inner_humidity += ((0.00000462963 * numberOfStudents * refreshTime) / 0.02*15883) * 100;
+    }
+
+    private void StudentCO2Contribution()
+    {
+        inner_co2 += (0.04346925 * numberOfStudents) / 19059;
     }
 
     private void RunAirConditioning(float goalTemp, float goalHumid, float goalCO2)
