@@ -261,8 +261,8 @@ public class AiPlanner : MonoBehaviour
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
-        if (!InWantedTemperatureRange(Temp_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
-        {// inner Temperature  too cold or to hot
+        //if (!InWantedTemperatureRange(Temp_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
+        //{// inner Temperature  too cold or to hot
 
             //Check if opening the window makes the temperature worse
             if ((wantedTemperature > Temp_IN && Temp_IN > Temp_OUT) /*too cold outside*/ || (Temp_OUT > Temp_IN && Temp_IN > wantedTemperature) /*too hot outside*/ )
@@ -275,23 +275,23 @@ public class AiPlanner : MonoBehaviour
             else
             {   //external values good enough
 
-                if (isWindowOpen)
-                {//Window already open, use aire condition
-                    this.activateAirConditionFlag[0] = true;
-                    print("Temp: Air conditioning flag set");
-                }
-                else
-                {
+                //if (isWindowOpen)
+                //{//Window already open, use aire condition
+                //    this.activateAirConditionFlag[0] = true;
+                //    print("Temp: Air conditioning flag set");
+                //}
+                //else
+                //{
                     this.openWindowFlag[0] = true;
                     print("Temp: Window flag set");
-                }
+                //}
             }
-        }
-        else
-        {
-            this.openWindowFlag[0] = true;
-            this.activateAirConditionFlag[0] = true;
-        }
+        //}
+        //else
+        //{
+        //    this.openWindowFlag[0] = true;
+        //    this.activateAirConditionFlag[0] = true;
+        //}
     }
 
     //Checks if given value is in humidity range
@@ -312,8 +312,8 @@ public class AiPlanner : MonoBehaviour
         float Humidity_IN = broker.GetHumidityInside();
         float Humidity_OUT = broker.GetHumidityOutside();
 
-        if (!InWantedHumidityRange(Humidity_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
-        {// inner Humidity too low or to high
+        //if (!InWantedHumidityRange(Humidity_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
+        //{// inner Humidity too low or to high
 
             //Check if opening the window makes the humidity worse
             if ( (wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT) /*too dry air outside*/ || (Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity) /*too hazy outside*/)
@@ -326,23 +326,23 @@ public class AiPlanner : MonoBehaviour
             else
             {   //external values good enough
 
-                if (isWindowOpen)
-                {//Window already open, use aire condition
-                    this.activateAirConditionFlag[1] = true;
-                    print("Humidity: Air conditioning flag set");
-                }
-                else
-                {
+                //if (isWindowOpen)
+                //{//Window already open, use aire condition
+                //    this.activateAirConditionFlag[1] = true;
+                //    print("Humidity: Air conditioning flag set");
+                //}
+                //else
+                //{
                     this.openWindowFlag[1] = true;
                     print("Humidity: Window flag set");
-                }
+                //}
             }
-        }
-        else
-        {
-            this.openWindowFlag[0] = true;
-            this.activateAirConditionFlag[0] = true;
-        }
+        //}
+        //else
+        //{
+        //    this.openWindowFlag[0] = true;
+        //    this.activateAirConditionFlag[0] = true;
+        //}
     }
 
     //Checks if given value is in CO2 range
@@ -363,8 +363,8 @@ public class AiPlanner : MonoBehaviour
         float CO2_IN = broker.GetCO2Inside();
         float CO2_OUT = broker.GetCO2Outside();
 
-        if (InWantedCO2Range(CO2_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
-        {// inner CO2 too low or to high
+        //if (InWantedCO2Range(CO2_IN)) //TODO: Wenn einer der Werte bereits in Range ist, öffnet sich das fenster nicht mehr 
+        //{// inner CO2 too low or to high
 
             //Check if opening the window makes the CO2 worse
             if ( (wantedCO2 > CO2_IN && CO2_IN > CO2_OUT) /*not stuffy enough air outside*/ || (CO2_OUT > CO2_IN && CO2_IN > wantedCO2) /*too stuffy air outside*/)
@@ -377,23 +377,23 @@ public class AiPlanner : MonoBehaviour
             else
             {   //external values good enough
 
-                if (isWindowOpen)
-                {//Window already open, use aire condition
-                    this.activateAirConditionFlag[2] = true;
-                    print("Humidity: Air conditioning flag set");
-                }
-                else
-                {
+                //if (isWindowOpen)
+                //{//Window already open, use aire condition
+                //    this.activateAirConditionFlag[2] = true;
+                //    print("Humidity: Air conditioning flag set");
+                //}
+                //else
+                //{
                     this.openWindowFlag[2] = true;
                     print("Humidity: Window flag set");
-                }
+                //}
             }
-        }
-        else
-        {
-            this.openWindowFlag[0] = true;
-            this.activateAirConditionFlag[0] = true;
-        }
+        //}
+        //else
+        //{
+        //    this.openWindowFlag[0] = true;
+        //    this.activateAirConditionFlag[0] = true;
+        //}
     }
 
 
