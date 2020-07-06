@@ -11,7 +11,7 @@ public class Environment : MonoBehaviour
     public float inner_humidity = 30.0f;
 
     public float outer_co2 = 5.0f;
-    public float inner_co2 = 10.0f;
+    public float inner_co2 = 6.0f;
 
     // max 266
     [Range(0,266)]
@@ -93,12 +93,12 @@ public class Environment : MonoBehaviour
 
     private void StudentHumidityContribution()
     {
-        inner_humidity += ((0.00000462963f * numberOfStudents * refreshTime) / 0.02f*15883f) * 100f;
+        inner_humidity += ((0.00000462963f * numberOfStudents * refreshTime) / (0.02f*15883f)) * 100f;
     }
 
     private void StudentCO2Contribution()
     {
-        inner_co2 += (0.04346925f * numberOfStudents) / 19059f;
+        inner_co2 += ((0.04346925f * numberOfStudents) / 19059f) * 100f;
     }
 
     private void RunAirConditioning(float goalTemp, float goalHumid, float goalCO2)
