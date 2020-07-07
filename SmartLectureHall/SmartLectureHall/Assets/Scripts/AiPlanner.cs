@@ -95,7 +95,7 @@ public class AiPlanner : MonoBehaviour
     {
         yield return 10;
         ApplySeatingPlan();
-
+        UpdateSeatingDisplay();
     }
 
     // Update is called once per frame
@@ -120,7 +120,7 @@ public class AiPlanner : MonoBehaviour
         {
             for (int j = 0; j < 14; j++)
             {
-                if (chairs[i, j].isLocked || !occupancie[i, j])
+                if (chairs[i, j].isLocked || occupancie[i, j])
                 {
                     displayLEDs[i, j].ChangeColor("red");
                 }

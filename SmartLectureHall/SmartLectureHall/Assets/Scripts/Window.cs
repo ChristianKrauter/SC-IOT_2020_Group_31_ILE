@@ -21,12 +21,12 @@ public class Window : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             anim.ResetTrigger("close");
             Open();
         }
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             anim.ResetTrigger("open");
             Close();

@@ -59,13 +59,6 @@ public class Chair : MonoBehaviour
         broker.SendData(sensorId, sensorValue);
     }
 
-    public bool GetLockStatus()
-    {
-        // todo
-        //return(indicator.GetComponent<Renderer>().material == green_material);
-        return true;
-    }
-
     public void ChangeIndicator(string color = "green")
     {
         Renderer meshRenderer = indicator.GetComponent<Renderer>();
@@ -101,12 +94,12 @@ public class Chair : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             anim.ResetTrigger("unlock");
             LockChair();
         }
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             anim.ResetTrigger("lock");
             UnlockChair();
