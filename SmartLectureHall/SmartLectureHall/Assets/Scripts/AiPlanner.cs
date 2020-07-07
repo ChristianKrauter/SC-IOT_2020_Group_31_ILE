@@ -221,7 +221,7 @@ public class AiPlanner : MonoBehaviour
         TemperatureControl(); //check temperature
         HumidityControl(); //check humidity
         CO2Control(); //check carbon dioxide 
-
+        
         if (openWindowFlag[0] && openWindowFlag[1] && openWindowFlag[2])
         {
             if (activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
@@ -246,7 +246,7 @@ public class AiPlanner : MonoBehaviour
             {// Window close wanted for at least one value and the rest released control
                 CloseWindows();
                 ActivateAirCondition();
-            }
+            }//else-block not nessesary; same as first inner block 
      
         }
         else
@@ -286,7 +286,7 @@ public class AiPlanner : MonoBehaviour
         else
         {   //external values good enough
 
-            if (!InWantedTemperatureRange(Temp_IN))
+            if (InWantedTemperatureRange(Temp_IN))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
                 this.activateAirConditionFlag[0] = true;
                 this.openWindowFlag[0] = true;
@@ -329,15 +329,15 @@ public class AiPlanner : MonoBehaviour
         else
         {   //external values good enough
 
-            if (!InWantedHumidityRange(Humidity_IN))
+            if (InWantedHumidityRange(Humidity_IN))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
-                this.activateAirConditionFlag[0] = true;
-                this.openWindowFlag[0] = true;
+                this.activateAirConditionFlag[1] = true;
+                this.openWindowFlag[1] = true;
                 print("Humidity: Window released for other Values");
             }
             else
             {
-                this.openWindowFlag[0] = true;
+                this.openWindowFlag[1] = true;
                 print("Humidity: Window flag set");
             }
         }
@@ -369,15 +369,15 @@ public class AiPlanner : MonoBehaviour
             this.activateAirConditionFlag[2] = true;
             print("CO2: Air conditioning flag set");
         }
-        if (!InWantedCO2Range(CO2_IN))
+        if (InWantedCO2Range(CO2_IN))
         {// Value is in Range but window open is not nesessary. Release window for the othe values
-            this.activateAirConditionFlag[0] = true;
-            this.openWindowFlag[0] = true;
+            this.activateAirConditionFlag[2] = true;
+            this.openWindowFlag[2] = true;
             print("CO2: Window released for other Values");
         }
         else
         {
-            this.openWindowFlag[0] = true;
+            this.openWindowFlag[2] = true;
             print("CO2: Window flag set");
         }
     }
