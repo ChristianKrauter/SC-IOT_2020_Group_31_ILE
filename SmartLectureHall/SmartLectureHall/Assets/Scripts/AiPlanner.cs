@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using TMPro;
 using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
@@ -36,6 +37,8 @@ public class AiPlanner : MonoBehaviour
 
     public SeatDisplay display;
     private readonly Led[,] displayLEDs = new Led[19, 14];
+
+    public GameObject infoDisplay;
 
     [Header("exam, pandemic")]
     [Header("smallClass, mcTest")]
@@ -100,6 +103,7 @@ public class AiPlanner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateInfoDisplay();
         timer += Time.deltaTime;
         if (timer > refreshTimer)
         {
@@ -135,6 +139,18 @@ public class AiPlanner : MonoBehaviour
             LoadSeatingPlan("pandemic");
         }
 
+    }
+
+    void UpdateInfoDisplay()
+    {
+        infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureInside(),2).ToString();
+        infoDisplay.transform.GetChild(0).Find("tempOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureOutside(), 2).ToString();
+
+        infoDisplay.transform.GetChild(0).Find("humidIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityInside(), 2).ToString();
+        infoDisplay.transform.GetChild(0).Find("humidOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityOutside(), 2).ToString();
+
+        infoDisplay.transform.GetChild(0).Find("CO2In").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Inside(), 2).ToString();
+        infoDisplay.transform.GetChild(0).Find("CO2Out").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Outside(), 2).ToString();
     }
 
     void LoadSeatingPlan(string name)
