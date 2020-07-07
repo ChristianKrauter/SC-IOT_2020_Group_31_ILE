@@ -59,13 +59,6 @@ public class Chair : MonoBehaviour
         broker.SendData(sensorId, sensorValue);
     }
 
-    public bool GetLockStatus()
-    {
-        // todo
-        //return(indicator.GetComponent<Renderer>().material == green_material);
-        return true;
-    }
-
     public void ChangeIndicator(string color = "green")
     {
         Renderer meshRenderer = indicator.GetComponent<Renderer>();
