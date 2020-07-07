@@ -103,7 +103,7 @@ public class AiPlanner : MonoBehaviour
         timer += Time.deltaTime;
         if (timer > refreshTimer)
         {
-            OpenWindowControl();
+            AirQualityControl();
             ApplySeatingPlan();
             UpdateSeatingDisplay();
 
@@ -243,7 +243,7 @@ public class AiPlanner : MonoBehaviour
         airCon4.TurnOff();
     }
 
-    void OpenWindowControl()
+    void AirQualityControl()
     {
         //Init
         openWindowFlag = new bool[3]; //Sett all entries to false
@@ -282,7 +282,7 @@ public class AiPlanner : MonoBehaviour
      
         }
         else
-        {// air condition for all values
+        {// deaktivate air condition for all values
             DeactivateAirCondition();
         }
 
