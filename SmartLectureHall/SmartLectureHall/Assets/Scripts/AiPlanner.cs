@@ -87,15 +87,14 @@ public class AiPlanner : MonoBehaviour
                 displayLEDs[i, j] = ledRow.gameObject.transform.GetChild(j).GetComponent<Led>();
             }
         }
-        currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + seatingPlan + ".sp");
+        // currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + seatingPlan + ".sp");
         StartCoroutine(WaitForLoading());
     }
 
     IEnumerator WaitForLoading()
     {
         yield return 10;
-        ApplySeatingPlan();
-        UpdateSeatingDisplay();
+        LoadSeatingPlan(seatingPlan);
     }
 
     // Update is called once per frame
@@ -110,6 +109,39 @@ public class AiPlanner : MonoBehaviour
 
             timer = 0;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            LoadSeatingPlan("standard");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            LoadSeatingPlan("frontHalf");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            LoadSeatingPlan("smallClass");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            LoadSeatingPlan("mcTest");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            LoadSeatingPlan("exam");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            LoadSeatingPlan("pandemic");
+        }
+
+    }
+
+    void LoadSeatingPlan(string name)
+    {
+        currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + name + ".sp");
+        ApplySeatingPlan();
+        UpdateSeatingDisplay();
     }
 
     void UpdateSeatingDisplay()
