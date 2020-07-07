@@ -94,12 +94,12 @@ public class Chair : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             anim.ResetTrigger("unlock");
             LockChair();
         }
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             anim.ResetTrigger("lock");
             UnlockChair();
