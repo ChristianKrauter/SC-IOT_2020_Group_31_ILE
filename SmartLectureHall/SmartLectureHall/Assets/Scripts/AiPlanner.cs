@@ -448,20 +448,23 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad
 
-            this.activateAirConditionFlag[2] = true;
+            //this.activateAirConditionFlag[2] = true;
+            this.aqActions[CO2] = AirQualityActions.activateAirCon;
             print("CO2: Air conditioning flag set");
         }
         else
         {
             if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
-                this.activateAirConditionFlag[2] = true;
-                this.openWindowFlag[2] = true;
+                //this.activateAirConditionFlag[2] = true;
+                //this.openWindowFlag[2] = true;
+                this.aqActions[CO2] = AirQualityActions.noMatter;
                 print("CO2: Window released for other Values");
             }
             else
             {
-                this.openWindowFlag[2] = true;
+                //this.openWindowFlag[2] = true;
+                this.aqActions[CO2] = AirQualityActions.openWindow;
                 print("CO2: Window flag set");
             }
         }
