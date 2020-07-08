@@ -31,6 +31,23 @@ public class AiPlanner : MonoBehaviour
     //private bool isWindowOpen = false;
 
     // One entry for each sensor family
+    enum SensorFamalies
+    {
+        Temperature,
+        Humidity,
+        Co2,
+        SensorFamaliesCOUNT
+    }
+
+    enum AirQualityActions 
+    {
+        noMatter,
+        dontOpenWindow,
+        openWindow,
+        activateAirCon,
+        AirQualityActionsCOUNT
+    }
+    private AirQualityActions[] aqActions;
     private bool[] activateAirConditionFlag;
     private bool[] openWindowFlag;
 
@@ -273,6 +290,7 @@ public class AiPlanner : MonoBehaviour
     void AirQualityControl()
     {
         //Init
+        aqActions = new AirQualityActions[SensorFamaliesCOUNT]; // Set all entries to default
         openWindowFlag = new bool[3]; //Sett all entries to false
         activateAirConditionFlag = new bool[3]; //Sett all entries to false
 
@@ -344,7 +362,7 @@ public class AiPlanner : MonoBehaviour
         {   //external values good enough
 
             if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
-            {// Value is in Range but window open is not nesessary. Release window for the othe values
+            {// Value is in Range but window open is not possible. Release window for the othe values
                 this.activateAirConditionFlag[0] = true;
                 this.openWindowFlag[0] = true;
                 print("Temp: Window released for other Values");
@@ -380,21 +398,24 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad   
 
-            this.activateAirConditionFlag[1] = true;
+            //this.activateAirConditionFlag[1] = true;
+            this.aqActions[Humidity] = AirQualityActions.activateAirCon;
             print("Humidity: Air conditioning flag set");
         }
         else
         {   //external values good enough
 
             if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
-            {// Value is in Range but window open is not nesessary. Release window for the othe values
-                this.activateAirConditionFlag[1] = true;
-                this.openWindowFlag[1] = true;
+            {// Value is in Range but window open is not possible. Release window for the othe values
+                this.aqActions[Humidity] = AirQualityActions.noMatter;
+                //this.activateAirConditionFlag[1] = true;
+                //this.openWindowFlag[1] = true;
                 print("Humidity: Window released for other Values");
             }
             else
-            {
-                this.openWindowFlag[1] = true;
+            {//open window neessary
+                this.aqActions[Humidity] = AirQualityActions.openWindow;
+                //this.openWindowFlag[1] = true;
                 print("Humidity: Window flag set");
             }
         }
