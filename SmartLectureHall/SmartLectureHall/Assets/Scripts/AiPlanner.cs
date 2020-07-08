@@ -143,14 +143,14 @@ public class AiPlanner : MonoBehaviour
 
     void UpdateInfoDisplay()
     {
-        infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureInside(),2).ToString();
-        infoDisplay.transform.GetChild(0).Find("tempOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureOutside(), 2).ToString();
+        infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureInside(),1).ToString("#0.0");
+        infoDisplay.transform.GetChild(0).Find("tempOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureOutside(), 1).ToString("#0.0");
 
-        infoDisplay.transform.GetChild(0).Find("humidIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityInside(), 2).ToString();
-        infoDisplay.transform.GetChild(0).Find("humidOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityOutside(), 2).ToString();
+        infoDisplay.transform.GetChild(0).Find("humidIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityInside(), 1).ToString("#0.0");
+        infoDisplay.transform.GetChild(0).Find("humidOut").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetHumidityOutside(), 1).ToString("#0.0");
 
-        infoDisplay.transform.GetChild(0).Find("CO2In").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Inside(), 2).ToString();
-        infoDisplay.transform.GetChild(0).Find("CO2Out").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Outside(), 2).ToString();
+        infoDisplay.transform.GetChild(0).Find("CO2In").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Inside(), 1).ToString("#0.0");
+        infoDisplay.transform.GetChild(0).Find("CO2Out").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Outside(), 1).ToString("#0.0");
     }
 
     void LoadSeatingPlan(string name)
