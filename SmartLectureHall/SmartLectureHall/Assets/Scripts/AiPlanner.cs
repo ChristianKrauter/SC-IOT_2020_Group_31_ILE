@@ -28,7 +28,7 @@ public class AiPlanner : MonoBehaviour
 
     public float aiUpdateRate = 60.0f;
     private float aiUpdateTimer = 0.0f;
-    private bool isWindowOpen = false;
+    //private bool isWindowOpen = false;
 
     // One entry for each sensor family
     private bool[] activateAirConditionFlag;
@@ -241,7 +241,7 @@ public class AiPlanner : MonoBehaviour
         print("Windows opened");
         window.Open();
         window2.Open();
-        isWindowOpen = true;
+        //isWindowOpen = true;
     }
 
     void CloseWindows()
@@ -249,7 +249,7 @@ public class AiPlanner : MonoBehaviour
         print("Windows closed");
         window.Close();
         window2.Close();
-        isWindowOpen = false;
+        //isWindowOpen = false;
     }
 
     void ActivateAirCondition()
