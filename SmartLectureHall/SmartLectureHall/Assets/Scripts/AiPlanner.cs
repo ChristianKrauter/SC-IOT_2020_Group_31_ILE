@@ -19,7 +19,7 @@ public class AiPlanner : MonoBehaviour
     // Target values
     public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 45f; // humidity in % at the desired temperature
-    public float wantedCO2 = 0.1f; // == 0.1 % CO2
+    public float wantedCO2 = 0.35f; // == 0.1 % CO2
 
     // Tolerances
     public float temperatureTolerance = 0.5f; // in °C 
