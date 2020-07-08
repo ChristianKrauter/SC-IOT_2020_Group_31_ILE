@@ -322,7 +322,7 @@ public class AiPlanner : MonoBehaviour
         float minTemp = temp2 - temperatureTolerance;
         float maxTemp = temp2 + temperatureTolerance;
 
-        return (temp1 >= minTemp && Temp1 <= maxTemp);
+        return (temp1 >= minTemp && temp1 <= maxTemp);
     }
 
     void TemperatureControl()
