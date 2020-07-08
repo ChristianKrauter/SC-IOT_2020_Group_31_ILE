@@ -15,18 +15,6 @@ public class Broker : MonoBehaviour
     float CO2;
 
     private bool[,] chairs = new bool[19, 14];
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-
-    }
 
     public void AddSensor(string sensorFamily, int sensorId, float sensorData)
     {
@@ -58,7 +46,6 @@ public class Broker : MonoBehaviour
         public int id;
         public string sensorFamily;
         public int sensorSlot;
-
 
         public Sensor(int _id, string _sensorFamily, int _sensorSlot)
         {
@@ -93,7 +80,6 @@ public class Broker : MonoBehaviour
             }
             return value / sensorValues["humidity_inside"].Count;
         }
-
         return -267.0f;
     }
 
@@ -136,7 +122,6 @@ public class Broker : MonoBehaviour
             }
             return value / sensorValues["temperature_outside"].Count;
         }
-
         return -267.0f;
     }
 
@@ -151,7 +136,6 @@ public class Broker : MonoBehaviour
             }
             return value / sensorValues["CO2_inside"].Count;
         }
-
         return -267.0f;
     }
 

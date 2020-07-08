@@ -19,6 +19,7 @@ public class Window : MonoBehaviour
         anim.ResetTrigger("open");
     }
 
+    // Change manually
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))

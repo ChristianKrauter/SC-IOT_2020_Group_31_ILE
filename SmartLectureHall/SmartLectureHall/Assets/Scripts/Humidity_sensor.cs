@@ -10,7 +10,18 @@ public class Humidity_sensor : MonoBehaviour
     public float timer = 0.0f;
     public float sensorValue = 0.0f;
     int sensorId;
-    // Start is called before the first frame update
+
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer > 5.0f)
+        {
+            timer = 0.0f;
+            SensorUpdate();
+            SendData();
+        }
+    }
+
     void Start()
     {
         if (inside)
@@ -24,20 +35,6 @@ public class Humidity_sensor : MonoBehaviour
         sensorId = this.GetHashCode();
         SensorUpdate();
         broker.AddSensor(sensorFamily, sensorId, sensorValue);
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        timer += Time.deltaTime;
-        if (timer > 5.0f)
-        {
-            timer = 0.0f;
-            SensorUpdate();
-            SendData();
-
-        }
     }
 
     void SensorUpdate()

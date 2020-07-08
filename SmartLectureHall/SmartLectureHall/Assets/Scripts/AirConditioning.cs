@@ -6,6 +6,12 @@ public class AirConditioning : MonoBehaviour
     public Environment env;
     private ParticleSystem ps;
 
+    public void Start()
+    {
+        ps = GetComponentInChildren<ParticleSystem>();
+        ps.Stop();
+    }
+
     public void TurnOn(float temp, float humidity, float co2)
     {
         anim.SetTrigger("on");
@@ -17,7 +23,6 @@ public class AirConditioning : MonoBehaviour
         ps.Play();
     }
 
-
     public void TurnOff()
     {
         anim.SetTrigger("off");
@@ -25,20 +30,13 @@ public class AirConditioning : MonoBehaviour
         ps.Stop();
     }
 
-	// Start is called before the first frame update
-    public void Start()
-    {
-        ps = GetComponentInChildren<ParticleSystem>();
-        ps.Stop();
-    }
-
-	// Update is called once per frame
+    // Change manually
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
             anim.ResetTrigger("off");
-            TurnOn(24f, 0f, 0f); // TODO add real values for humidity and co2 // this is just for testing, so, no
+            TurnOn(24f, 50f, 6f);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {

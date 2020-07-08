@@ -7,39 +7,41 @@ using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
 {
+    // Actuators
     public Window window;
     public Window window2;
     public AirConditioning airCon;
     public AirConditioning airCon2;
     public AirConditioning airCon3;
     public AirConditioning airCon4;
+    public GameObject seat_rows;
 
+    // Target values
     public float wantedTemperature = 20f; // centigrade
     public float wantedHumidity = 45f; // humidity in % at the desired temperature
     public float wantedCO2 = 0.1f; // == 0.1 % CO2
 
-    public float refreshTimer = 60.0f;
-    private float timer = 0.0f;
-
-    public GameObject seat_rows;
-    private bool isWindowOpen = false;
-
-    // One entry for each Sensorfamalie
-    private bool[] activateAirConditionFlag;
-    private bool[] openWindowFlag;
-
+    // Tolerances
     public float temperatureTolerance = 0.5f; // in °C 
     public float humidityTolerance = 0.0025f; // 0.25%
     public float CO2Tolerance = 0.001f; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
 
+    public float aiUpdateRate = 60.0f;
+    private float aiUpdateTimer = 0.0f;
+    private bool isWindowOpen = false;
+
+    // One entry for each sensor family
+    private bool[] activateAirConditionFlag;
+    private bool[] openWindowFlag;
+
+    // Seating control and displays
+    public GameObject infoDisplay;
+    public SeatDisplay display;
     private int[,] currentSeatingPlan;
     private readonly Chair[,] chairs = new Chair[19, 14];
-
-    public SeatDisplay display;
     private readonly Led[,] displayLEDs = new Led[19, 14];
 
-    public GameObject infoDisplay;
-
+    // Seating plans
     [Header("exam, pandemic")]
     [Header("smallClass, mcTest")]
     [Header("standard, frontHalf")]
@@ -75,10 +77,12 @@ public class AiPlanner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Serialize(newSeatingPlan, "Assets/SeatingPlans/smallclass.sp");
+        // Uncomment to create new seating plan
+        // Serialize(newSeatingPlan, "Assets/SeatingPlans/smallclass.sp");
         var ledRows = display.gameObject.transform.Find("LEDs");
         var seatRows = seat_rows.gameObject.transform;
 
+        // Build arrays to access chairs and seating display
         for (int i = 0; i < 19; i++)
         {
             var seatRow = seatRows.GetChild(i);
@@ -90,7 +94,7 @@ public class AiPlanner : MonoBehaviour
                 displayLEDs[i, j] = ledRow.gameObject.transform.GetChild(j).GetComponent<Led>();
             }
         }
-        // currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + seatingPlan + ".sp");
+        // Wait for objects to be loaded before loading first seating plan
         StartCoroutine(WaitForLoading());
     }
 
@@ -100,20 +104,22 @@ public class AiPlanner : MonoBehaviour
         LoadSeatingPlan(seatingPlan);
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateInfoDisplay();
-        timer += Time.deltaTime;
-        if (timer > refreshTimer)
+        aiUpdateTimer += Time.deltaTime;
+
+        // Start AI planner update
+        if (aiUpdateTimer > aiUpdateRate)
         {
             AirQualityControl();
             ApplySeatingPlan();
             UpdateSeatingDisplay();
 
-            timer = 0;
+            aiUpdateTimer = 0;
         }
 
+        // Handle user input for seating plan changes
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             LoadSeatingPlan("standard");
@@ -138,9 +144,9 @@ public class AiPlanner : MonoBehaviour
         {
             LoadSeatingPlan("pandemic");
         }
-
     }
 
+    // Get values from broker to update information display
     void UpdateInfoDisplay()
     {
         infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetTemperatureInside(),1).ToString("#0.0");
@@ -153,6 +159,7 @@ public class AiPlanner : MonoBehaviour
         infoDisplay.transform.GetChild(0).Find("CO2Out").GetComponent<TextMeshProUGUI>().text = Math.Round(broker.GetCO2Outside(), 1).ToString("#0.0");
     }
 
+    // Load selected seating plan, apply, update display
     void LoadSeatingPlan(string name)
     {
         currentSeatingPlan = (int[,])Deserialize("Assets/SeatingPlans/" + name + ".sp");
@@ -160,6 +167,7 @@ public class AiPlanner : MonoBehaviour
         UpdateSeatingDisplay();
     }
 
+    // Update seating display according to seating plan and students
     void UpdateSeatingDisplay()
     {
         print("Update display");
@@ -168,6 +176,7 @@ public class AiPlanner : MonoBehaviour
         {
             for (int j = 0; j < 14; j++)
             {
+                // Check for each chair if it is locked or occupied
                 if (chairs[i, j].isLocked || occupancie[i, j])
                 {
                     displayLEDs[i, j].ChangeColor("red");
@@ -181,6 +190,7 @@ public class AiPlanner : MonoBehaviour
 
     }
 
+    // Reset all chairs and lock according to seating plan
     void ApplySeatingPlan()
     {
         print("Apply seating plan");
@@ -206,6 +216,7 @@ public class AiPlanner : MonoBehaviour
         }
     }
 
+    // Helper to save seating plan to disk
     public static void Serialize(object t, string path)
     {
         using (Stream stream = File.Open(path, FileMode.Create))
@@ -215,6 +226,7 @@ public class AiPlanner : MonoBehaviour
         }
     }
 
+    // Helper to load seating plan from disk
     public static object Deserialize(string path)
     {
         using (Stream stream = File.Open(path, FileMode.Open))
@@ -243,7 +255,6 @@ public class AiPlanner : MonoBehaviour
     void ActivateAirCondition()
     {
         print("Air conditioning activated: ");
-
         airCon.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon2.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon3.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
@@ -429,8 +440,4 @@ public class AiPlanner : MonoBehaviour
             print("CO2: Window flag set");
         }
     }
-
-
-
-
 }

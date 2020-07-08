@@ -8,13 +8,30 @@ public class Chair : MonoBehaviour
     private Material green_material;
     private Material orange_material;
     public Broker broker;
+
     [HideInInspector]
     public bool isLocked;
     [HideInInspector]
     public bool isOccupied;
+
     private Transform student;
     string sensorId;
     bool sensorValue;
+
+    public void Start()
+    {
+        this.isOccupied = false;
+        red_material = Resources.Load<Material>("Materials/red_alert");
+        green_material = Resources.Load<Material>("Materials/green_alert");
+        orange_material = Resources.Load<Material>("Materials/orange_alert");
+        anim = GetComponent<Animator>();
+        indicator = transform.Find("student_indicator");
+        student = transform.Find("student");
+        student.gameObject.SetActive(false);
+        sensorId = transform.parent.name.Split('_')[2] + "-" + this.name.Split('r')[1];
+        sensorValue = isOccupied;
+        broker.SendData(sensorId, sensorValue);
+    }
 
     public void LockChair()
     {
@@ -29,7 +46,6 @@ public class Chair : MonoBehaviour
             ChangeIndicator("red");
             anim.SetTrigger("lock");
         }
-        //print("chair locked");
     }
 
     public void UnlockChair()
@@ -38,14 +54,12 @@ public class Chair : MonoBehaviour
         anim.ResetTrigger("lock");
         ChangeIndicator("green");
         anim.SetTrigger("unlock");
-        //print("chair unlocked");
     }
 
     public void OccupyChair()
     {
         isOccupied = true;
         student.gameObject.SetActive(true);
-        // print("chair occupied");
         sensorValue = true;
         broker.SendData(sensorId, sensorValue);
     }
@@ -54,7 +68,6 @@ public class Chair : MonoBehaviour
     {
         isOccupied = false;
         student.gameObject.SetActive(false);
-        // print("chair emptied");
         sensorValue = false;
         broker.SendData(sensorId, sensorValue);
     }
@@ -74,24 +87,9 @@ public class Chair : MonoBehaviour
         {
             meshRenderer.material = orange_material;
         }
-        //print("chair changed to " + color);
     }
 
-    public void Start()
-    {
-        this.isOccupied = false;
-        red_material = Resources.Load<Material>("Materials/red_alert");
-        green_material = Resources.Load<Material>("Materials/green_alert");
-        orange_material = Resources.Load<Material>("Materials/orange_alert");
-        anim = GetComponent<Animator>();
-        indicator = transform.Find("student_indicator");
-        student = transform.Find("student");
-        student.gameObject.SetActive(false);
-        sensorId = transform.parent.name.Split('_')[2] + "-" + this.name.Split('r')[1];
-        sensorValue = isOccupied;
-        broker.SendData(sensorId, sensorValue);
-    }
-
+    // Change manually
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))

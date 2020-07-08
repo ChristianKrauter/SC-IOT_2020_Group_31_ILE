@@ -13,12 +13,13 @@ public class Environment : MonoBehaviour
     public float outer_co2 = 5.0f;
     public float inner_co2 = 6.0f;
 
-    // max 266
     [Range(0,266)]
     public int numberOfStudents = 50;
+
     public GameObject seat_rows;
     private readonly Chair[,] chairs = new Chair[19, 14];
 
+    // Timers and refresh times
     private float actuatorTimer = 0.0f;
     public float actuatorRefreshRate = 1.0f;
 
@@ -40,6 +41,7 @@ public class Environment : MonoBehaviour
 
     public void Start()
     {
+        // Build arrays to access chairs
         for (int i = 0; i < 19; i++)
         {
             var row = seat_rows.gameObject.transform.GetChild(i);
@@ -48,6 +50,7 @@ public class Environment : MonoBehaviour
                 chairs[i, j] = row.gameObject.transform.GetChild(j).GetComponent<Chair>();
             }
         }
+        // Wait for objects to be loaded before distributing students the first time
         StartCoroutine(WaitForLoading());
     }
 
@@ -55,7 +58,6 @@ public class Environment : MonoBehaviour
     {
         yield return 10;
         DistributeStudents();
-
     }
 
     private void Update()
@@ -65,6 +67,7 @@ public class Environment : MonoBehaviour
         studentCO2Timer += Time.deltaTime;
         studentTempHumidTimer += Time.deltaTime;
 
+        // Apply effects of actuators
         if (actuatorTimer > actuatorRefreshRate)
         {
             actuatorTimer = 0;
@@ -78,18 +81,14 @@ public class Environment : MonoBehaviour
             }
         }
 
+        // Re-distribute students
         if (studentDistTimer > studentDistRefreshRate)
         {
             studentDistTimer = 0;
             DistributeStudents();
         }
 
-        if (studentCO2Timer > studentCO2UpdateRate)
-        {
-            studentCO2Timer = 0;
-            StudentCO2Contribution();
-        }
-
+        // Apply temp and humid contribution of students
         if (studentTempHumidTimer > studentTempHumidUpdateRate)
         {
             studentTempHumidTimer = 0;
@@ -97,26 +96,36 @@ public class Environment : MonoBehaviour
             StudentHumidityContribution();
         }
 
+        // Apply CO2 contribution of students
+        if (studentCO2Timer > studentCO2UpdateRate)
+        {
+            studentCO2Timer = 0;
+            StudentCO2Contribution();
+        }
     }
 
+    // Students increase temperature
     private void StudentHeatDissipation()
     {
-        print(string.Format("Student Heat += {0}", ((numberOfStudents * 120 * studentTempHumidUpdateRate) / 19288000)));
+        // print(string.Format("Student Heat += {0}", ((numberOfStudents * 120 * studentTempHumidUpdateRate) / 19288000)));
         inner_temperature += ((numberOfStudents * 120 * studentTempHumidUpdateRate) / 19288000);
     }
 
+    // Students increase humidty
     private void StudentHumidityContribution()
     {
-        print(string.Format("Student Humid += {0}", ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f * 15883f)) * 100f));
+        // print(string.Format("Student Humid += {0}", ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f * 15883f)) * 100f));
         inner_humidity += ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f*15883f)) * 100f;
     }
 
+    // Students increase CO2
     private void StudentCO2Contribution()
     {
-        print(string.Format("Student CO2 += {0}", ((0.04346925f * numberOfStudents) / 19059f) * 100f));
+        // print(string.Format("Student CO2 += {0}", ((0.04346925f * numberOfStudents) / 19059f) * 100f));
         inner_co2 += ((0.04346925f * numberOfStudents) / 19059f) * 100f;
     }
 
+    // Effect of air conditioning
     private void RunAirConditioning(float goalTemp, float goalHumid, float goalCO2)
     {
         // Temperature
@@ -150,6 +159,7 @@ public class Environment : MonoBehaviour
         }
     }
 
+    // Effect of opening windows
     private void Ventilate()
     {
         // Temperature
@@ -182,7 +192,8 @@ public class Environment : MonoBehaviour
             inner_co2 -= 0.001f;
         }
     }
-
+    
+    // Reset students and re-distribute randomly
     private void DistributeStudents()
     {
         List<Chair> availableChairs = new List<Chair>();
