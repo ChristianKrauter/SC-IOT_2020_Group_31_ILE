@@ -23,8 +23,8 @@ public class AiPlanner : MonoBehaviour
 
     // Tolerances
     public float temperatureTolerance = 0.5f; // in °C 
-    public float humidityTolerance = 0.0025f; // 0.25%
-    public float CO2Tolerance = 0.001f; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
+    public float humidityTolerance = 0.25f; // 0.25%
+    public float CO2Tolerance = 0.1f; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
 
     public float aiUpdateRate = 60.0f;
     private float aiUpdateTimer = 0.0f;
