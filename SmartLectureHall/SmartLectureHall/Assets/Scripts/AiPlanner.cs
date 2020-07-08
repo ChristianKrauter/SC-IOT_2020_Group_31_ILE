@@ -17,8 +17,8 @@ public class AiPlanner : MonoBehaviour
     public GameObject seat_rows;
 
     // Target values
-    public float wantedTemperature = 20f; // centigrade
-    public float wantedHumidity = 45f; // humidity in % at the desired temperature
+    public float wantedTemperature = 20.0f; // centigrade
+    public float wantedHumidity = 45.0f; // humidity in % at the desired temperature
     public float wantedCO2 = 0.35f; // == 0.1 % CO2
 
     // Tolerances
@@ -360,16 +360,13 @@ public class AiPlanner : MonoBehaviour
     }
 
     //Checks if given value is in humidity range
-    bool InWantedHumidityRange(float currentHum)
+    // Two Humidity values are equals if they are in Range to each other
+    bool IsHum1InRangeOfHum2(float hum1, float hum2)
     {
-        float minHum = wantedHumidity - humidityTolerance;
-        float maxHum = wantedHumidity + humidityTolerance;
+        float minHum = hum2 - humidityTolerance;
+        float maxHum = hum2 + humidityTolerance;
 
-        if (currentHum >= minHum && currentHum <= maxHum)
-        {
-            return true;
-        }
-        return false;
+        return (hum1 >= minHum && hum1 <= maxHum);
     }
 
     void HumidityControl()
@@ -377,8 +374,11 @@ public class AiPlanner : MonoBehaviour
         float Humidity_IN = broker.GetHumidityInside();
         float Humidity_OUT = broker.GetHumidityOutside();
 
+        bool tooDryAirOutside = !IsHum1InRangeOfHum2(wantedHumidity, Humidity_IN) && wantedHumidity > Humidity_IN && !IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT) && Humidity_IN > Humidity_OUT;
+        bool tooHazyAirOutside = !IsHum1InRangeOfHum2(Humidity_OUT, Humidity_IN) && Humidity_OUT > Humidity_IN && !IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity) && Humidity_IN > wantedHumidity;
+
         //Check if opening the window makes the humidity worse
-        if ((wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT) /*too dry air outside*/ || (Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity) /*too hazy outside*/)
+        if ( tooDryAirOutside || tooHazyAirOutside)
         {
             //outside values too bad   
 
@@ -388,7 +388,7 @@ public class AiPlanner : MonoBehaviour
         else
         {   //external values good enough
 
-            if (InWantedHumidityRange(Humidity_IN))
+            if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
                 this.activateAirConditionFlag[1] = true;
                 this.openWindowFlag[1] = true;
