@@ -41,10 +41,11 @@ public class AiPlanner : MonoBehaviour
 
     enum AirQualityActions 
     {
-        noMatter,
-        dontOpenWindow,
+        
+        dontOpenWindow, // ==0 =>default
         openWindow,
         activateAirCon,
+        noMatter,
         AirQualityActionsCOUNT
     }
     private AirQualityActions[] aqActions;
@@ -355,7 +356,8 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad
 
-            this.activateAirConditionFlag[0] = true;
+            //this.activateAirConditionFlag[0] = true;
+            this.aqActions[Temperature] = AirQualityActions.activateAirCon;
             print("Temp: Air conditioning flag set");
         }
         else
@@ -363,13 +365,15 @@ public class AiPlanner : MonoBehaviour
 
             if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
             {// Value is in Range but window open is not possible. Release window for the othe values
-                this.activateAirConditionFlag[0] = true;
-                this.openWindowFlag[0] = true;
+                //this.activateAirConditionFlag[0] = true;
+                //this.openWindowFlag[0] = true;
+                this.aqActions[Temperature] = AirQualityActions.noMatter;
                 print("Temp: Window released for other Values");
             }
             else
             {
-                this.openWindowFlag[0] = true;
+                //this.openWindowFlag[0] = true;
+                this.aqActions[Temperature] = AirQualityActions.openWindow;
                 print("Temp: Window flag set");
             }
         }
