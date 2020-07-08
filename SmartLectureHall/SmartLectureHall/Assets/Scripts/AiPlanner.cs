@@ -315,17 +315,14 @@ public class AiPlanner : MonoBehaviour
 
     }
 
-    //Checks if given value is in temparature range
-    bool InWantedTemperatureRange(float currentTemp)
+    //Checks if given value is in temperature range
+    // Two temperature values are equals if they are in Range to each other
+    bool IsTemp1InRangeOfTemp2(float temp1, float temp2)
     {
-        float minTemp = wantedTemperature - temperatureTolerance;
-        float maxTemp = wantedTemperature + temperatureTolerance;
+        float minTemp = temp2 - temperatureTolerance;
+        float maxTemp = temp2 + temperatureTolerance;
 
-        if (currentTemp >= minTemp && currentTemp <= maxTemp)
-        {
-            return true;
-        }
-        return false;
+        return (temp1 >= minTemp && Temp1 <= maxTemp);
     }
 
     void TemperatureControl()
@@ -334,8 +331,12 @@ public class AiPlanner : MonoBehaviour
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
+        bool tooColdOutside = !IsTemp1InRangeOfTemp2(wantedTemperature, Temp_IN) && wantedTemperature > Temp_IN && !IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT) && Temp_IN > Temp_OUT;
+        bool tooHotOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, Temp_IN) && Temp_OUT > Temp_IN && !IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature) && Temp_IN > wantedTemperature;
+
+
         //Check if opening the window makes the temperature worse
-        if ((wantedTemperature > Temp_IN && Temp_IN > Temp_OUT) /*too cold outside*/ || (Temp_OUT > Temp_IN && Temp_IN > wantedTemperature) /*too hot outside*/ )
+        if (tooColdOutside || tooHotOutside)
         {
             //outside values too bad
 
@@ -345,7 +346,7 @@ public class AiPlanner : MonoBehaviour
         else
         {   //external values good enough
 
-            if (InWantedTemperatureRange(Temp_IN))
+            if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
                 this.activateAirConditionFlag[0] = true;
                 this.openWindowFlag[0] = true;
