@@ -17,13 +17,19 @@ public class Environment : MonoBehaviour
     [Range(0,266)]
     public int numberOfStudents = 50;
     public GameObject seat_rows;
-    public float refreshTime = 50.0f;
-    public float studentRefreshTime = 120.0f;
-    private float timer = 0.0f;
-    private float studentTimer = 0.0f;
     private readonly Chair[,] chairs = new Chair[19, 14];
-    private float CO2Timer = 0.0f;
-    private float cO2UpdateRate = 3600.0f;
+
+    private float actuatorTimer = 0.0f;
+    public float actuatorRefreshRate = 1.0f;
+
+    private float studentDistTimer = 0.0f;
+    public float studentDistRefreshRate = 120.0f;
+
+    private float studentCO2Timer = 0.0f;
+    public float studentCO2UpdateRate = 3600.0f;
+
+    private float studentTempHumidTimer = 0.0f;
+    public float studentTempHumidUpdateRate = 50.0f;
 
     // Ventilation & airconditioning
     public bool ventilating = false;
@@ -54,15 +60,14 @@ public class Environment : MonoBehaviour
 
     private void Update()
     {
-        timer += Time.deltaTime;
-        studentTimer += Time.deltaTime;
-        CO2Timer += Time.deltaTime;
+        actuatorTimer += Time.deltaTime;
+        studentDistTimer += Time.deltaTime;
+        studentCO2Timer += Time.deltaTime;
+        studentTempHumidTimer += Time.deltaTime;
 
-        if (timer > refreshTime)
+        if (actuatorTimer > actuatorRefreshRate)
         {
-            timer = 0;
-            StudentHeadDissipation();
-            StudentHumidityContribution();
+            actuatorTimer = 0;
             if (ventilating)
             {
                 Ventilate();
@@ -73,31 +78,42 @@ public class Environment : MonoBehaviour
             }
         }
 
-        if (studentTimer > studentRefreshTime)
+        if (studentDistTimer > studentDistRefreshRate)
         {
-            studentTimer = 0;
+            studentDistTimer = 0;
             DistributeStudents();
         }
 
-        if (CO2Timer > cO2UpdateRate)
+        if (studentCO2Timer > studentCO2UpdateRate)
         {
-            CO2Timer = 0;
+            studentCO2Timer = 0;
             StudentCO2Contribution();
         }
+
+        if (studentTempHumidTimer > studentTempHumidUpdateRate)
+        {
+            studentTempHumidTimer = 0;
+            StudentHeatDissipation();
+            StudentHumidityContribution();
+        }
+
     }
 
-    private void StudentHeadDissipation()
+    private void StudentHeatDissipation()
     {
-        inner_temperature += ((numberOfStudents * 120 * refreshTime) / 19288000);
+        print(string.Format("Student Heat += {0}", ((numberOfStudents * 120 * studentTempHumidUpdateRate) / 19288000)));
+        inner_temperature += ((numberOfStudents * 120 * studentTempHumidUpdateRate) / 19288000);
     }
 
     private void StudentHumidityContribution()
     {
-        inner_humidity += ((0.00000462963f * numberOfStudents * refreshTime) / (0.02f*15883f)) * 100f;
+        print(string.Format("Student Humid += {0}", ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f * 15883f)) * 100f));
+        inner_humidity += ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f*15883f)) * 100f;
     }
 
     private void StudentCO2Contribution()
     {
+        print(string.Format("Student CO2 += {0}", ((0.04346925f * numberOfStudents) / 19059f) * 100f));
         inner_co2 += ((0.04346925f * numberOfStudents) / 19059f) * 100f;
     }
 
