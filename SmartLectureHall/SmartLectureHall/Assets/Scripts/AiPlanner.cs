@@ -280,43 +280,36 @@ public class AiPlanner : MonoBehaviour
         TemperatureControl(); //check temperature
         HumidityControl(); //check humidity
         CO2Control(); //check carbon dioxide 
-        
-        if (openWindowFlag[0] && openWindowFlag[1] && openWindowFlag[2])
-        {
-            if (activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
-            {// Control released for all Value
-                CloseWindows();
-                DeactivateAirCondition();
-            }
-            else
-            {// Window open wanted for at least one value and the rest released control
-                OpenWindows();
-                DeactivateAirCondition();
-            }        
-        }
-        else
-        {// window closed for at least one value
+
+        if (openWindowFlag[0] && openWindowFlag[1] && openWindowFlag[2] && activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
+        {//  no matter for all values -> close all
             CloseWindows();
-        }
-
-        if (activateAirConditionFlag[0] || activateAirConditionFlag[1] || activateAirConditionFlag[2])
-        {// min one value cant open window and needs the airCondition
-            if (activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2] && activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
-            {// Control released for all Value// Window close wanted for at least one value and the rest released control
-                CloseWindows();
-                DeactivateAirCondition();
-            }
-            else
-            {
-                CloseWindows();
-                ActivateAirCondition();
-            }  
-        }
-        else
-        {// deaktivate air condition for all values
             DeactivateAirCondition();
+            return;
         }
 
+        if ( activateAirConditionFlag[0] || activateAirConditionFlag[1] || activateAirConditionFlag[2] )
+        {// AC + any -> AC
+            CloseWindows();
+            ActivateAirCondition();
+            return;
+        }
+
+        if (openWindowFlag[0] && openWindowFlag[1] && openWindowFlag[2])
+        {// open Window
+            OpenWindows();
+            DeactivateAirCondition();
+            return;
+        }
+        
+        if(openWindowFlag[0] || openWindowFlag[1] || openWindowFlag[2])
+        {// do nothing + window -> AC
+            CloseWindows();
+            ActivateAirCondition();
+            return;
+        }
+
+        // do nothing
     }
 
     //Checks if given value is in temperature range
