@@ -404,16 +404,13 @@ public class AiPlanner : MonoBehaviour
     }
 
     //Checks if given value is in CO2 range
-    bool InWantedCO2Range(float currentCO2)
+    // Two CO2 values are equals if they are in Range to each other
+    bool IsCO2_1InRangeOfCO2_2(float CO2_1, float CO2_2)
     {
-        float minCO2 = wantedCO2 - CO2Tolerance;
-        float maxCO2 = wantedCO2 + CO2Tolerance;
+        float minCO2 = CO2_2 - CO2Tolerance;
+        float maxCO2 = CO2_2 + CO2Tolerance;
 
-        if (currentCO2 >= minCO2 && currentCO2 <= maxCO2)
-        {
-            return true;
-        }
-        return false;
+        return (Co2_1 >= minCO2 && CO2_1 <= maxCO2);
     }
 
     void CO2Control()
@@ -421,15 +418,18 @@ public class AiPlanner : MonoBehaviour
         float CO2_IN = broker.GetCO2Inside();
         float CO2_OUT = broker.GetCO2Outside();
 
+        bool notStuffyEnoughAirOutside = !IsCO2_1InRangeOfCO2_2(wantedCO2, CO2_IN) && wantedCO2 > CO2_IN && !IsCO2_1InRangeOfCO2_2(CO2_IN, CO2_OUT) && CO2_IN > CO2_OUT;
+        bool tooStuffyAirOutside = !IsCO2_1InRangeOfCO2_2(CO2_OUT, CO2_IN) && CO2_OUT > CO2_IN && !IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2) && CO2_IN > wantedCO2;
+
         //Check if opening the window makes the CO2 worse
-        if ((wantedCO2 > CO2_IN && CO2_IN > CO2_OUT) /*not stuffy enough air outside*/ || (CO2_OUT > CO2_IN && CO2_IN > wantedCO2) /*too stuffy air outside*/)
+        if (notStuffyEnoughAirOutside || tooStuffyAirOutside)
         {
             //outside values too bad
 
             this.activateAirConditionFlag[2] = true;
             print("CO2: Air conditioning flag set");
         }
-        if (InWantedCO2Range(CO2_IN))
+        if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
         {// Value is in Range but window open is not nesessary. Release window for the othe values
             this.activateAirConditionFlag[2] = true;
             this.openWindowFlag[2] = true;
