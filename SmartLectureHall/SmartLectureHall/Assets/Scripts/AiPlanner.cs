@@ -19,11 +19,11 @@ public class AiPlanner : MonoBehaviour
     // Target values
     public float wantedTemperature = 20.0f; // centigrade
     public float wantedHumidity = 45.0f; // humidity in % at the desired temperature
-    public float wantedCO2 = 0.35f; // == 0.1 % CO2
+    public float wantedCO2 = 3.5f; // == 3.5 % CO2
 
     // Tolerances
     public float temperatureTolerance = 0.5f; // in °C 
-    public float humidityTolerance = 0.25f; // 0.25%
+    public float humidityTolerance = 2.5f; // 0.25%
     public float CO2Tolerance = 0.1f; // = 0.1% //0-6% ok, 8% ohnmacht, 12% tot
 
     public float aiUpdateRate = 60.0f;
@@ -299,14 +299,18 @@ public class AiPlanner : MonoBehaviour
             CloseWindows();
         }
 
-        if (activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
-        {
-            if (!openWindowFlag[0] || !openWindowFlag[1] || !openWindowFlag[2])
-            {// Window close wanted for at least one value and the rest released control
+        if (activateAirConditionFlag[0] || activateAirConditionFlag[1] || activateAirConditionFlag[2])
+        {// min one value cant open window and needs the airCondition
+            if (activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2] && activateAirConditionFlag[0] && activateAirConditionFlag[1] && activateAirConditionFlag[2])
+            {// Control released for all Value// Window close wanted for at least one value and the rest released control
+                CloseWindows();
+                DeactivateAirCondition();
+            }
+            else
+            {
                 CloseWindows();
                 ActivateAirCondition();
-            }//else-block not nessesary; same as first inner block 
-     
+            }  
         }
         else
         {// deaktivate air condition for all values
@@ -429,16 +433,20 @@ public class AiPlanner : MonoBehaviour
             this.activateAirConditionFlag[2] = true;
             print("CO2: Air conditioning flag set");
         }
-        if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
-        {// Value is in Range but window open is not nesessary. Release window for the othe values
-            this.activateAirConditionFlag[2] = true;
-            this.openWindowFlag[2] = true;
-            print("CO2: Window released for other Values");
-        }
         else
         {
-            this.openWindowFlag[2] = true;
-            print("CO2: Window flag set");
+            if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
+            {// Value is in Range but window open is not nesessary. Release window for the othe values
+                this.activateAirConditionFlag[2] = true;
+                this.openWindowFlag[2] = true;
+                print("CO2: Window released for other Values");
+            }
+            else
+            {
+                this.openWindowFlag[2] = true;
+                print("CO2: Window flag set");
+            }
         }
+        
     }
 }
