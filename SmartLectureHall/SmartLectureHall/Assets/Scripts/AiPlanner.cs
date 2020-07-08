@@ -410,7 +410,7 @@ public class AiPlanner : MonoBehaviour
         float minCO2 = CO2_2 - CO2Tolerance;
         float maxCO2 = CO2_2 + CO2Tolerance;
 
-        return (Co2_1 >= minCO2 && CO2_1 <= maxCO2);
+        return (CO2_1 >= minCO2 && CO2_1 <= maxCO2);
     }
 
     void CO2Control()
