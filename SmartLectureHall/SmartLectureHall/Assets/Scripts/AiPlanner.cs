@@ -361,10 +361,16 @@ public class AiPlanner : MonoBehaviour
         //Check if opening the window makes the temperature worse
         if (tooColdOutside || tooHotOutside)
         {
-            //outside values too bad
-
-           this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
-            print("Temp: Air conditioning flag set");
+            if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
+            {// Value is in Range but outside value make it worse. -> dont open Window
+                this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
+                print("Temp:  Value is in Range but outside value make it worse");
+            }
+            else
+            {// Value is not in Range so activate AirCondition
+                this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
+                print("Temp: activate AirCondition");
+            }
         }
         else
         {   //external values good enough
@@ -402,11 +408,18 @@ public class AiPlanner : MonoBehaviour
 
         //Check if opening the window makes the humidity worse
         if ( tooDryAirOutside || tooHazyAirOutside)
-        {
-            //outside values too bad   
+        {//outside values too bad
 
-            this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
-            print("Humidity: Air conditioning flag set");
+            if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
+            {// Value is in Range but outside value make it worse. -> dont open Window
+                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
+                print("Humidity:  Value is in Range but outside value make it worse");
+            }
+            else
+            {// Value is not in Range so activate AirCondition
+                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
+                print("Humidity: activate AirCondition");
+            }
         }
         else
         {   //external values good enough
@@ -444,11 +457,18 @@ public class AiPlanner : MonoBehaviour
 
         //Check if opening the window makes the CO2 worse
         if (notStuffyEnoughAirOutside || tooStuffyAirOutside)
-        {
-            //outside values too bad
+        {//outside values too bad
 
-            this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
-            print("CO2: Air conditioning flag set");
+            if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
+            {// Value is in Range but outside value make it worse. -> dont open Window
+                this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.dontOpenWindow;
+                print("CO2:  Value is in Range but outside value make it worse");
+            }
+            else
+            {// Value is not in Range so activate AirCondition
+                this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
+                print("CO2: activate AirCondition");
+            }
         }
         else
         {
