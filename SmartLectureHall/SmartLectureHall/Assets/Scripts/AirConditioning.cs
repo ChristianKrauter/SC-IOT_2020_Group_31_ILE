@@ -19,7 +19,7 @@ public class AirConditioning : MonoBehaviour
         env.airConditioningHumid = humidity;
         env.airConditioningCO2 = co2;
         env.airConditioning = true;
-
+        anim.ResetTrigger("off");
         ps.Play();
     }
 
@@ -27,6 +27,7 @@ public class AirConditioning : MonoBehaviour
     {
         anim.SetTrigger("off");
         env.airConditioning = false;
+        anim.ResetTrigger("on");
         ps.Stop();
     }
 
@@ -35,12 +36,10 @@ public class AirConditioning : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            anim.ResetTrigger("off");
             TurnOn(24f, 50f, 6f);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            anim.ResetTrigger("on");
             TurnOff();
         }
     }

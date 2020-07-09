@@ -24,12 +24,10 @@ public class Window : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            anim.ResetTrigger("close");
             Open();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            anim.ResetTrigger("open");
             Close();
         }
     }
