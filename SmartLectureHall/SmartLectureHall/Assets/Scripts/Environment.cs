@@ -39,6 +39,10 @@ public class Environment : MonoBehaviour
     public float airConditioningHumid = 0f;
     public float airConditioningCO2 = 0f;
 
+    // Demo Video
+    public bool customStudentDistribution;
+    public bool waitForSeatingPlan;
+
     public void Start()
     {
         // Build arrays to access chairs
@@ -56,7 +60,14 @@ public class Environment : MonoBehaviour
 
     IEnumerator WaitForLoading()
     {
-        yield return 10;
+        if (waitForSeatingPlan)
+        {
+            yield return new WaitForSeconds(10);
+        }
+        else
+        {
+            yield return new WaitForSeconds(5);
+        }
         DistributeStudents();
     }
 
@@ -196,31 +207,64 @@ public class Environment : MonoBehaviour
     // Reset students and re-distribute randomly
     private void DistributeStudents()
     {
-        List<Chair> availableChairs = new List<Chair>();
-        print("Distribute Students");
-        // Reset
-        for (int i = 0; i < 19; i++)
+        if (!customStudentDistribution)
         {
-            for (int j = 0; j < 14; j++)
+            List<Chair> availableChairs = new List<Chair>();
+            print("Distribute Students");
+            // Reset
+            for (int i = 0; i < 19; i++)
             {
-                chairs[i, j].EmptyChair();
-                if (!chairs[i,j].isLocked)
+                for (int j = 0; j < 14; j++)
                 {
-                    availableChairs.Add(chairs[i, j]);
+                    chairs[i, j].EmptyChair();
+                    if (!chairs[i, j].isLocked)
+                    {
+                        availableChairs.Add(chairs[i, j]);
+                    }
                 }
             }
-        }
 
-        // Assign randomly
-        for (int i = 0; i < numberOfStudents; i++)
-        {
-            if (availableChairs.Count == 0)
+            print(availableChairs.Count);
+
+            // Assign randomly
+            for (int i = 0; i < numberOfStudents; i++)
             {
-                break;
+                if (availableChairs.Count == 0)
+                {
+                    break;
+                }
+                var index = Random.Range(0, availableChairs.Count - 1);
+                availableChairs[index].OccupyChair();
+                availableChairs.RemoveAt(index);
             }
-            var index = Random.Range(0, availableChairs.Count - 1);
-            availableChairs[index].OccupyChair();
-            availableChairs.RemoveAt(index);
+        }
+        else
+        {
+            List<(int, int)> customChairSelection = new List<(int, int)>(){
+                (0, 0), (0, 2), (0, 4), (0, 6), (0, 7), (0, 9), (0, 11), (0, 13),
+                (1, 1), (1, 3), (1, 5), (1, 8), (1, 10), (1, 12),
+                (2, 0), (2, 2), (2, 4), (2, 6), (2, 7), (2, 9), (2, 11), (2, 13),
+                (3, 1), (3, 3), (3, 5), (3, 8), (3, 10), (3, 12),
+                (4, 0), (4, 2), (4, 4), (4, 6), (4, 7), (4, 9), (4, 11), (4, 13),
+                (5, 1), (5, 3), (5, 5), (5, 8), (5, 10), (5, 12),
+                (6, 0), (6, 2), (6, 4), (6, 6), (6, 7), (6, 9), (6, 11), (6, 13),
+                (7, 1), (7, 3), (7, 5), /*(7, 8),*/ (7, 10), (7, 12),
+                (8, 0), (8, 2), (8, 4), (8, 6), (8, 7), (8, 9), (8, 11), (8, 13),
+                (9, 1), (9, 3), (9, 5), (9, 8), (9, 10), (9, 12),
+                (10, 0), (10, 2), (10, 4), (10, 6), (10, 7), (10, 9), (10, 11), (10, 13),
+                (11, 1), (11, 3), (11, 5), (11, 8), (11, 10), (11, 12),
+                (12, 0), (12, 2), (12, 4), (12, 6), (12, 7), (12, 9), (12, 11), (12, 13),
+                (13, 1), (13, 3), (13, 5), (13, 8), (13, 10), (13, 12),
+                (14, 0), (14, 2), (14, 4), (14, 6), (14, 7), (14, 9), (14, 11), (14, 13),
+                (15, 1), (15, 3), (15, 5), (15, 8), (15, 10), (15, 12),
+                (16, 0), (16, 2), (16, 4), (16, 6), (16, 7), (16, 9), (16, 11), (16, 13),
+                (17, 1), (17, 3), (17, 5), (17, 8), (17, 10), (17, 12),
+                (18, 0), (18, 2), (18, 4), (18, 6), (18, 7), (18, 9), (18, 11), (18, 13),
+            };
+            foreach (var index in customChairSelection)
+            {
+                chairs[index.Item1, index.Item2].OccupyChair();
+            }
         }
     }
 }
