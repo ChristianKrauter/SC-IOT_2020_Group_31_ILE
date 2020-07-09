@@ -40,8 +40,7 @@ public class AiPlanner : MonoBehaviour
     }
 
     enum AirQualityActions 
-    {
-        
+    { 
         dontOpenWindow, // ==0 =>default
         openWindow,
         activateAirCon,
@@ -49,8 +48,6 @@ public class AiPlanner : MonoBehaviour
         AirQualityActionsCOUNT
     }
     private AirQualityActions[] aqActions;
-    //private bool[] activateAirConditionFlag;
-    //private bool[] openWindowFlag;
 
     // Seating control and displays
     public GameObject infoDisplay;
@@ -291,21 +288,19 @@ public class AiPlanner : MonoBehaviour
     void AirQualityControl()
     {
         //Init
-        aqActions = new AirQualityActions[(int)SensorFamalies.SensorFamaliesCOUNT]; // Set all entries to default
-        //openWindowFlag = new bool[3]; //Sett all entries to false
-        //activateAirConditionFlag = new bool[3]; //Sett all entries to false
+        this.aqActions = new AirQualityActions[(int)SensorFamalies.SensorFamaliesCOUNT]; // Set all entries to default
 
         //Check enviromental
         TemperatureControl(); //check temperature
         HumidityControl(); //check humidity
         CO2Control(); //check carbon dioxide 
 
-        bool AcPulsAny = aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.activateAirCon) || aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.activateAirCon) || aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.activateAirCon);
+        bool AcPulsAny = this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.activateAirCon);
 
         // Combination of "openWindow" and "dontOpenWindow" -> AC
-        bool openWindowPlusDontOpenWindow = (aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
-            (aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
-            (aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) && (aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)));
+        bool openWindowPlusDontOpenWindow = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
+            (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
+            (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)));
 
         if (AcPulsAny || openWindowPlusDontOpenWindow)
         {// (AC + any) or (openWindow + dontOpenWindow) -> AC
@@ -315,9 +310,9 @@ public class AiPlanner : MonoBehaviour
         }
 
         // Combination of "noMatter" and "dontOpenWindow" -> do nothing or close all
-        bool noMatterOrDoNothing = aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.noMatter) || aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)
-            && aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.noMatter) || aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)
-            && aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.noMatter) || aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow);
+        bool noMatterOrDoNothing = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.noMatter) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow))
+            && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.noMatter) || this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow))
+            && (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.noMatter) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow));
 
         if (noMatterOrDoNothing)
         {//  only "noMatter" or "dontOpenWindow" for all values -> close all
@@ -326,10 +321,10 @@ public class AiPlanner : MonoBehaviour
             return;
         }
 
-        // only "openWindow" or "NoMatter"
-        bool windowPlusNoMatter = aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) || aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.noMatter)
-            && aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) || aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.noMatter)
-            && aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) || aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.noMatter);
+        // only "openWindow" or "noMatter"
+        bool windowPlusNoMatter = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.noMatter))
+            && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) || this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.noMatter))
+            && (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.noMatter));
 
         if (windowPlusNoMatter)
         {// open Window
@@ -337,7 +332,10 @@ public class AiPlanner : MonoBehaviour
             DeactivateAirCondition();
             return;
         }
+
         // do nothing
+        CloseWindows();
+        DeactivateAirCondition();
     }
 
     //Checks if given value is in temperature range
@@ -365,8 +363,7 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad
 
-            //this.activateAirConditionFlag[0] = true;
-            this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
+           this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
             print("Temp: Air conditioning flag set");
         }
         else
@@ -374,14 +371,11 @@ public class AiPlanner : MonoBehaviour
 
             if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
             {// Value is in Range but window open is not possible. Release window for the othe values
-                //this.activateAirConditionFlag[0] = true;
-                //this.openWindowFlag[0] = true;
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.noMatter;
                 print("Temp: Window released for other Values");
             }
             else
             {
-                //this.openWindowFlag[0] = true;
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.openWindow;
                 print("Temp: Window flag set");
             }
@@ -411,7 +405,6 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad   
 
-            //this.activateAirConditionFlag[1] = true;
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
             print("Humidity: Air conditioning flag set");
         }
@@ -421,14 +414,11 @@ public class AiPlanner : MonoBehaviour
             if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
             {// Value is in Range but window open is not possible. Release window for the othe values
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.noMatter;
-                //this.activateAirConditionFlag[1] = true;
-                //this.openWindowFlag[1] = true;
                 print("Humidity: Window released for other Values");
             }
             else
             {//open window neessary
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
-                //this.openWindowFlag[1] = true;
                 print("Humidity: Window flag set");
             }
         }
@@ -457,7 +447,6 @@ public class AiPlanner : MonoBehaviour
         {
             //outside values too bad
 
-            //this.activateAirConditionFlag[2] = true;
             this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
             print("CO2: Air conditioning flag set");
         }
@@ -465,14 +454,11 @@ public class AiPlanner : MonoBehaviour
         {
             if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
             {// Value is in Range but window open is not nesessary. Release window for the othe values
-                //this.activateAirConditionFlag[2] = true;
-                //this.openWindowFlag[2] = true;
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.noMatter;
                 print("CO2: Window released for other Values");
             }
             else
             {
-                //this.openWindowFlag[2] = true;
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.openWindow;
                 print("CO2: Window flag set");
             }
