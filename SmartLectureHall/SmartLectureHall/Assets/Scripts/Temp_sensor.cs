@@ -56,11 +56,11 @@ public class Temp_sensor : MonoBehaviour
 
         if (inside)
         {
-            sensorValue = env.inner_co2 + Random.Range(-0.1f, 0.1f);
+            sensorValue = env.inner_temperature + Random.Range(-0.1f, 0.1f);
         }
         else
         {
-            sensorValue = env.outer_co2 + Random.Range(-0.1f, 0.1f);
+            sensorValue = env.outer_temperature + Random.Range(-0.1f, 0.1f);
         }
 
         if (amqp.IsConnected)
@@ -82,6 +82,7 @@ public class Temp_sensor : MonoBehaviour
     // Handles a connection event
     void HandleConnected(AmqpClient client)
     {
+        Debug.Log("Connected temp: " + sensorId);
         SensorData data = new SensorData();
         data.id = sensorId;
         data.family = sensorFamily;
