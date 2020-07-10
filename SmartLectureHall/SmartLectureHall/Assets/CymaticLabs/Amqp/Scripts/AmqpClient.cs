@@ -404,7 +404,7 @@ namespace CymaticLabs.Unity3D.Amqp
             if (hasConnected)
             {
                 hasConnected = false; // reset the flag for the next event
-                Log("Connected to AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
+                // Log("Connected to AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
                 if (OnConnected != null) OnConnected.Invoke(this);
             }
 
@@ -412,7 +412,7 @@ namespace CymaticLabs.Unity3D.Amqp
             if (hasDisconnected)
             {
                 hasDisconnected = false; // reset the flag for the next event
-                Log("Disconnected from AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
+                // Log("Disconnected from AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
                 if (OnDisconnected != null) OnDisconnected.Invoke(this);
             }
 
@@ -427,7 +427,7 @@ namespace CymaticLabs.Unity3D.Amqp
             if (isReconnecting)
             {
                 isReconnecting = false; // reset the flag for the next event
-                Log("Reconnecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+                // Log("Reconnecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
                 if (OnReconnecting != null) OnReconnecting.Invoke(this);
             }
 
@@ -436,7 +436,7 @@ namespace CymaticLabs.Unity3D.Amqp
             {
                 wasBlocked = false; // reset the flag for the next event
                 AmqpConsole.Color = Color.red;
-                Log("Connection to AMQP host blocked: {0}", AmqpHelper.GetConnectionInfo(client));
+                // Log("Connection to AMQP host blocked: {0}", AmqpHelper.GetConnectionInfo(client));
                 AmqpConsole.Color = null;
                 if (OnBlocked != null) OnBlocked.Invoke(this);
             }
@@ -446,7 +446,7 @@ namespace CymaticLabs.Unity3D.Amqp
             {
                 hasAborted = false; // reset the flag for the next event
                 AmqpConsole.Color = Color.red;
-                Log("Connection to AMQP host aborted: {0}", AmqpHelper.GetConnectionInfo(client));
+                // Log("Connection to AMQP host aborted: {0}", AmqpHelper.GetConnectionInfo(client));
                 AmqpConsole.Color = null;
                 if (OnConnectionAborted != null) OnConnectionAborted.Invoke(this);
             }
@@ -606,7 +606,7 @@ namespace CymaticLabs.Unity3D.Amqp
                     if (OnSubscribedToExchange != null) OnSubscribedToExchange.Invoke(sub);
 
                     // Log
-                    Log("Subscribed to exchange: {0}:{1}", sub.ExchangeName, sub.RoutingKey);
+                    // Log("Subscribed to exchange: {0}:{1}", sub.ExchangeName, sub.RoutingKey);
                 }
             }
 
@@ -628,7 +628,7 @@ namespace CymaticLabs.Unity3D.Amqp
                     if (OnSubscribedToQueue != null) OnSubscribedToQueue.Invoke(sub);
 
                     // Log
-                    Log("Subscribed to queue: {0}:{1}", sub.QueueName, sub.UseAck);
+                    //Log("Subscribed to queue: {0}:{1}", sub.QueueName, sub.UseAck);
                 }
             }
 
@@ -654,7 +654,7 @@ namespace CymaticLabs.Unity3D.Amqp
                     if (OnUnsubscribedFromExchange != null) OnUnsubscribedFromExchange.Invoke(sub);
 
                     // Log
-                    Log("Unsubscribed from exchange: {0}:{1}", sub.ExchangeName, sub.RoutingKey);
+                    //Log("Unsubscribed from exchange: {0}:{1}", sub.ExchangeName, sub.RoutingKey);
                 }
             }
 
@@ -676,7 +676,7 @@ namespace CymaticLabs.Unity3D.Amqp
                     if (OnUnsubscribedFromQueue != null) OnUnsubscribedFromQueue.Invoke(sub);
 
                     // Log
-                    Log("Unsubscribed from queue: {0}:{1}", sub.QueueName, sub.UseAck);
+                    //Log("Unsubscribed from queue: {0}:{1}", sub.QueueName, sub.UseAck);
                 }
             }
 
@@ -876,7 +876,7 @@ namespace CymaticLabs.Unity3D.Amqp
             }
 
             // Connect the client
-            Log("Connecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+            //Log("Connecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
             client.Connect();
         }
 
@@ -901,7 +901,7 @@ namespace CymaticLabs.Unity3D.Amqp
             }
 
             // Connect the client
-            Log("Disconnecting from AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+            //Log("Disconnecting from AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
             if (OnDisconnecting != null) OnDisconnecting.Invoke(this);
             isDisconnecting = true;
         }
@@ -930,7 +930,7 @@ namespace CymaticLabs.Unity3D.Amqp
             if (client == null) return;
 
             // Connect the client
-            Log("Reseting connection for AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+            //Log("Reseting connection for AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
             client.ResetConnection();
         }
 
@@ -1722,7 +1722,7 @@ namespace CymaticLabs.Unity3D.Amqp
             // Decode as text
             var payload = System.Text.Encoding.UTF8.GetString(message.Body);
             AmqpConsole.Color = new Color(1f, 0.5f, 0);
-            Log("Message received on {0}: {1}", subscription.ExchangeName + (!string.IsNullOrEmpty(message.RoutingKey) ? ":" + message.RoutingKey : ""), payload);
+            // Log("Message received on {0}: {1}", subscription.ExchangeName + (!string.IsNullOrEmpty(message.RoutingKey) ? ":" + message.RoutingKey : ""), payload);
             AmqpConsole.Color = null;
         }
 
@@ -1736,7 +1736,7 @@ namespace CymaticLabs.Unity3D.Amqp
             // Decode as text
             var payload = System.Text.Encoding.UTF8.GetString(message.Body);
             AmqpConsole.Color = new Color(1f, 0.5f, 0);
-            Log("Message received on {0}: {1}", subscription.QueueName, payload);
+            // Log("Message received on {0}: {1}", subscription.QueueName, payload);
             AmqpConsole.Color = null;
         }
 
