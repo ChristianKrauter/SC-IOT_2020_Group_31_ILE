@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using CymaticLabs.Unity3D.Amqp;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class CO2_sensor : MonoBehaviour
 {
-    public Broker broker;
     public Environment env;
     public bool inside;
     public string sensorType;
@@ -12,9 +13,31 @@ public class CO2_sensor : MonoBehaviour
     public float timer = 0.0f;
     public float sensorValue = 0.0f;
     int sensorId;
+    AmqpClient amqp;    
 
     void Start()
     {
+
+        amqp = this.gameObject.AddComponent<AmqpClient>();
+
+        amqp.OnConnected = new AmqpClientUnityEvent();
+        amqp.OnDisconnected = new AmqpClientUnityEvent();
+        amqp.OnReconnecting = new AmqpClientUnityEvent();
+        amqp.OnBlocked = new AmqpClientUnityEvent();
+        amqp.OnSubscribedToExchange = new AmqpExchangeSubscriptionUnityEvent();
+        amqp.OnUnsubscribedFromExchange = new AmqpExchangeSubscriptionUnityEvent();
+
+        amqp.OnConnected.AddListener(HandleConnected);
+        amqp.OnDisconnected.AddListener(HandleDisconnected);
+        amqp.OnReconnecting.AddListener(HandleReconnecting);
+        amqp.OnBlocked.AddListener(HandleBlocked);
+        amqp.OnSubscribedToExchange.AddListener(HandleExchangeSubscribed);
+        amqp.OnUnsubscribedFromExchange.AddListener(HandleExchangeUnsubscribed);
+        amqp.Connection = "localhost";
+        amqp.WriteToConsole = false;
+        
+
+
         if (inside)
         {
             sensorFamily = sensorType + "_inside";
@@ -24,8 +47,8 @@ public class CO2_sensor : MonoBehaviour
             sensorFamily = sensorType + "_outside";
         }
         sensorId = this.GetHashCode();
+        amqp.ConnectToHost();
         SensorUpdate();
-        broker.AddSensor(sensorFamily, sensorId, sensorValue);
     }
 
     void Update()
@@ -35,24 +58,86 @@ public class CO2_sensor : MonoBehaviour
         {
             timer = 0.0f;
             SensorUpdate();
-            SendData();
         }
     }
 
     void SensorUpdate()
     {
+
         if (inside)
         {
-            sensorValue = env.inner_co2 + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.inner_co2 + Random.Range(-0.1f, 0.1f);
         }
         else
         {
-            sensorValue = env.outer_co2 + Random.Range(-0.5f, 0.5f);
+            sensorValue = env.outer_co2 + Random.Range(-0.1f, 0.1f);
+        }
+
+        if (amqp.IsConnected)
+        {
+            SensorData data = new SensorData
+            {
+                id = sensorId,
+                family = sensorFamily,
+                value = sensorValue,
+                type = "co2"
+            };
+
+            string json = JsonUtility.ToJson(data);
+            amqp.PublishToExchange("sensorData", "", json);
         }
     }
 
-    void SendData()
+
+    #region Event Handlers
+
+    // Handles a connection event
+    void HandleConnected(AmqpClient client)
     {
-        broker.SendData(sensorId, sensorValue);
+        SensorData data = new SensorData
+        {
+            id = sensorId,
+            family = sensorFamily,
+            value = sensorValue,
+            type = "add"
+        };
+
+        string json = JsonUtility.ToJson(data);
+        amqp.PublishToExchange("sensorData", "", json);
     }
+
+    
+    // Handles a disconnection event
+    void HandleDisconnected(AmqpClient client)
+    {
+        Debug.Log("Disconnected");
+    }
+
+    // Handles a reconnecting event
+    void HandleReconnecting(AmqpClient client)
+    {
+
+    }
+
+    // Handles a blocked event
+    void HandleBlocked(AmqpClient client)
+    {
+
+    }
+
+    // Handles exchange subscribes
+    void HandleExchangeSubscribed(AmqpExchangeSubscription subscription)
+    {
+        // Add it to the local list
+        //exSubscriptions.Add(subscription);
+    }
+
+    // Handles exchange unsubscribes
+    void HandleExchangeUnsubscribed(AmqpExchangeSubscription subscription)
+    {
+        // Add it to the local list
+        //exSubscriptions.Remove(subscription);
+    }
+
+    #endregion Event Handlers
 }
