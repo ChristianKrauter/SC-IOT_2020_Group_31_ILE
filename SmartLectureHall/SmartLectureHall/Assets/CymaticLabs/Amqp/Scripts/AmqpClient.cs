@@ -404,7 +404,7 @@ namespace CymaticLabs.Unity3D.Amqp
             if (hasConnected)
             {
                 hasConnected = false; // reset the flag for the next event
-                //Log("Connected to AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
+                Log("Connected to AMQP host {0}", AmqpHelper.GetConnectionInfo(client));
                 if (OnConnected != null) OnConnected.Invoke(this);
             }
 
@@ -876,7 +876,7 @@ namespace CymaticLabs.Unity3D.Amqp
             }
 
             // Connect the client
-            //Log("Connecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+            Log("Connecting to AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
             client.Connect();
         }
 
@@ -901,7 +901,7 @@ namespace CymaticLabs.Unity3D.Amqp
             }
 
             // Connect the client
-            //Log("Disconnecting from AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
+            Log("Disconnecting from AMQP host: {0}", AmqpHelper.GetConnectionInfo(client));
             if (OnDisconnecting != null) OnDisconnecting.Invoke(this);
             isDisconnecting = true;
         }
@@ -1678,7 +1678,7 @@ namespace CymaticLabs.Unity3D.Amqp
         /// <param name="value">The value to log.</param>
         public void LogToConsole(object value)
         {
-            Debug.Log(value);
+            // Debug.Log(value);
             if (WriteToConsole) AmqpConsole.WriteLine(value, true);
         }
 
@@ -1704,7 +1704,7 @@ namespace CymaticLabs.Unity3D.Amqp
         /// <param name="values">The values to use in the formatted string.</param>
         public void LogToConsole(string text, params object[] values)
         {
-            Debug.LogFormat(text, values);
+            // Debug.LogFormat(text, values);
             if (WriteToConsole) AmqpConsole.WriteLineFormat(text, true, values);
         }
 
