@@ -46,7 +46,7 @@ public class CO2_sensor : MonoBehaviour
         {
             sensorFamily = sensorType + "_outside";
         }
-        sensorId = this.GetHashCode();
+        sensorId = (transform.parent.name + this.gameObject.name).GetHashCode();
         amqp.ConnectToHost();
         SensorUpdate();
     }
@@ -94,7 +94,6 @@ public class CO2_sensor : MonoBehaviour
     // Handles a connection event
     void HandleConnected(AmqpClient client)
     {
-        Debug.Log("Connected co2: " + sensorId);
         SensorData data = new SensorData
         {
             id = sensorId,

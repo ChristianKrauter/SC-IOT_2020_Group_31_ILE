@@ -46,7 +46,7 @@ public class Temp_sensor : MonoBehaviour
         {
             sensorFamily = sensorType + "_outside";
         }
-        sensorId = this.GetHashCode();
+        sensorId = (transform.parent.name + this.gameObject.name).GetHashCode();
         amqp.ConnectToHost();
         SensorUpdate();
     }
@@ -82,7 +82,7 @@ public class Temp_sensor : MonoBehaviour
     // Handles a connection event
     void HandleConnected(AmqpClient client)
     {
-        Debug.Log("Connected temp: " + sensorId);
+       
         SensorData data = new SensorData();
         data.id = sensorId;
         data.family = sensorFamily;

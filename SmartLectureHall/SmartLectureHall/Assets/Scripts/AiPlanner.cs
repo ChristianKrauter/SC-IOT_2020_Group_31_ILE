@@ -610,9 +610,13 @@ public class AiPlanner : MonoBehaviour
             sensorFamilies.Add(sensorFamily);
             sensorValues.Add(sensorFamily, new ArrayList());
         }
-        int sensorSlot = sensorValues[sensorFamily].Add(sensorData);
-        Sensor sensor = new Sensor(sensorId, sensorFamily, sensorSlot);
-        sensors.Add(sensor.id, sensor);
+        if (!sensors.ContainsKey(sensorId))
+        {
+            int sensorSlot = sensorValues[sensorFamily].Add(sensorData);
+            Sensor sensor = new Sensor(sensorId, sensorFamily, sensorSlot);
+            sensors.Add(sensor.id, sensor);
+        }
+        
     }
 
 
