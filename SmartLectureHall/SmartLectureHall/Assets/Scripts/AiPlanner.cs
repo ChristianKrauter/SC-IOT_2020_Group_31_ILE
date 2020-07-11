@@ -149,7 +149,7 @@ public class AiPlanner : MonoBehaviour
 
     IEnumerator WaitForLoading()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(10);
         LoadSeatingPlan(seatingPlan);
     }
 
