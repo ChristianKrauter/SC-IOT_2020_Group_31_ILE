@@ -295,12 +295,14 @@ public class AiPlanner : MonoBehaviour
         HumidityControl(); //check humidity
         CO2Control(); //check carbon dioxide 
 
+
+
         bool AcPulsAny = this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.activateAirCon);
 
         // Combination of "openWindow" and "dontOpenWindow" -> AC
-        bool openWindowPlusDontOpenWindow = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
-            (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) ||
-            (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)));
+        bool openWindowPlusDontOpenWindow = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) 
+            || (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) 
+            || (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)));
 
         if (AcPulsAny || openWindowPlusDontOpenWindow)
         {// (AC + any) or (openWindow + dontOpenWindow) -> AC
@@ -354,9 +356,11 @@ public class AiPlanner : MonoBehaviour
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
-        bool tooColdOutside = !IsTemp1InRangeOfTemp2(wantedTemperature, Temp_IN) && wantedTemperature > Temp_IN && !IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT) && Temp_IN > Temp_OUT;
-        bool tooHotOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, Temp_IN) && Temp_OUT > Temp_IN && !IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature) && Temp_IN > wantedTemperature;
+        bool tooColdOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemperature) && !IsTemp1InRangeOfTemp2(wantedTemperature, Temp_IN)
+            && Temp_OUT < wantedTemperature && wantedTemperature < Temp_IN;
 
+        bool tooHotOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, Temp_IN) && !IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature)
+            && Temp_OUT > Temp_IN && Temp_IN > wantedTemperature;
 
         //Check if opening the window makes the temperature worse
         if (tooColdOutside || tooHotOutside)
@@ -403,13 +407,47 @@ public class AiPlanner : MonoBehaviour
         float Humidity_IN = broker.GetHumidityInside();
         float Humidity_OUT = broker.GetHumidityOutside();
 
-        bool tooDryAirOutside = !IsHum1InRangeOfHum2(wantedHumidity, Humidity_IN) && wantedHumidity > Humidity_IN && !IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT) && Humidity_IN > Humidity_OUT;
-        bool tooHazyAirOutside = !IsHum1InRangeOfHum2(Humidity_OUT, Humidity_IN) && Humidity_OUT > Humidity_IN && !IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity) && Humidity_IN > wantedHumidity;
+        bool InOutEquals = IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT);
+        bool InWantedEquals = IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity);
+        bool OutWantedEquals = IsHum1InRangeOfHum2(Humidity_OUT, wantedHumidity);
+
+        if (!InOutEquals && !InWantedEquals && !OutWantedEquals) 
+        {//worse OR openWin
+
+            //##########TODO##########
+            return;
+
+        }
+
+        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals) )
+        {//AC
+            this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
+            print("Humidity: activate AirCondition");
+            return;
+        }
+
+        if (!InOutEquals && InWantedEquals && !OutWantedEquals)
+        {//dontOpenWin
+            this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
+            print("Humidity:  Value is in Range but outside value make it worse");
+            return;
+        }
+
+        if (InOutEquals && InWantedEquals && OutWantedEquals)
+        {//doNothing
+            this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
+            print("Humidity:  Value is in Range but outside value make it worse");
+            return;
+        }
+
+        //!IsHum1InRangeOfHum2(wantedHumidity, Humidity_IN) && !IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT);
+        bool tooDryAirOutside = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
+        bool tooHazyAirOutside = Humidity_OUT > Humidity_IN  && Humidity_IN > wantedHumidity;
 
         //Check if opening the window makes the humidity worse
-        if ( tooDryAirOutside || tooHazyAirOutside)
-        {//outside values too bad
-
+        if ( tooDryAirOutside || tooHazyAirOutside) 
+        {//IN and OUT outside of Range of wanted
+            //outside values too bad
             if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
             {// Value is in Range but outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
@@ -422,8 +460,8 @@ public class AiPlanner : MonoBehaviour
             }
         }
         else
-        {   //external values good enough
-
+        {//min one of (IN ,OUT) in Range of wanted   
+            //external values good enough
             if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
             {// Value is in Range but window open is not possible. Release window for the othe values
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.noMatter;
