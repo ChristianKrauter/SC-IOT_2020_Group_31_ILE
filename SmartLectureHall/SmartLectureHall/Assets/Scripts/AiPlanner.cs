@@ -394,14 +394,14 @@ public class AiPlanner : MonoBehaviour
         float Temp_OUT = GetTemperatureOutside();
 
         bool InOutEquals = IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT);
-        bool InWantedEquals = IsTemp1InRangeOfTemp2(Temp_IN, wantedTemp);
-        bool OutWantedEquals = IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemp);
+        bool InWantedEquals = IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature);
+        bool OutWantedEquals = IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemperature);
 
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
 
-            bool tooHotOutside = wantedTemp > Temp_IN && Temp_IN > Temp_OUT;
-            bool tooColdOutside = Temp_OUT > Temp_IN && Temp_IN > wantedTemp;
+            bool tooHotOutside = wantedTemperature > Temp_IN && Temp_IN > Temp_OUT;
+            bool tooColdOutside = Temp_OUT > Temp_IN && Temp_IN > wantedTemperature;
 
             if (tooHotOutside || tooColdOutside)
             {//outside value make it worse. -> dont open Window
@@ -513,15 +513,15 @@ public class AiPlanner : MonoBehaviour
         float CO2_IN = GetCO2Inside();
         float CO2_OUT = GetCO2Outside();
 
-        bool InOutEquals = IsCO2_1InRangeOfCO2_2(CO2y_IN, CO2_OUT);
-        bool InWantedEquals = IsCO2_1InRangeOfCO2_2(CO2y_IN, wantedCO2);
+        bool InOutEquals = IsCO2_1InRangeOfCO2_2(CO2_IN, CO2_OUT);
+        bool InWantedEquals = IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2);
         bool OutWantedEquals = IsCO2_1InRangeOfCO2_2(CO2_OUT, wantedCO2);
 
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
 
-            bool tooStuffyAir = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
-            bool tooCleanAir = Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity;
+            bool tooStuffyAir = wantedCO2 > CO2_IN && CO2_IN > CO2_OUT;
+            bool tooCleanAir = CO2_OUT > CO2_IN && CO2_IN > wantedCO2;
 
             if (tooStuffyAir || tooCleanAir)
             {//outside value make it worse. -> dont open Window
@@ -531,7 +531,7 @@ public class AiPlanner : MonoBehaviour
             else
             {//open window neessary
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.openWindow;
-                print("Humidity: Window flag set");
+                print("CO2: Window flag set");
             }
             return;
         }
@@ -545,7 +545,7 @@ public class AiPlanner : MonoBehaviour
 
         if (!InOutEquals && InWantedEquals && !OutWantedEquals)
         {//dontOpenWin
-            this.aqActions[(int)SensorFamalies.Co2] = AirQualityActions.dontOpenWindow;
+            this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.dontOpenWindow;
             print("CO2:  Value is in Range but outside value make it worse");
             return;
         }
