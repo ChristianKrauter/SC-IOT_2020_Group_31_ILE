@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HotStudent : MonoBehaviour
 {
@@ -12,7 +10,7 @@ public class HotStudent : MonoBehaviour
     private float heatingTimer;
     private float coolingTimer;
     private bool heating = false;
-    private bool cooling= false;
+    private bool cooling = false;
 
     void Start()
     {

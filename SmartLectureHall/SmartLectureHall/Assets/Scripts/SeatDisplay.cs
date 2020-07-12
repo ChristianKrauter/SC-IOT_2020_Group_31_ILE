@@ -1,3 +1,3 @@
 ﻿using UnityEngine;
 
-public class SeatDisplay : MonoBehaviour{}
+public class SeatDisplay : MonoBehaviour { }

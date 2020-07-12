@@ -38,7 +38,7 @@ public class Broker : MonoBehaviour
     {
         int row = int.Parse(sensorId.Split('-')[0]);
         int number = int.Parse(sensorId.Split('-')[1]);
-        chairs[row-1,number-1] = occupancie;
+        chairs[row - 1, number - 1] = occupancie;
     }
 
     class Sensor
@@ -60,8 +60,8 @@ public class Broker : MonoBehaviour
         public string id;
         public int row;
         public int number;
-        
-        public Chair (string _id, int _row, int _number)
+
+        public Chair(string _id, int _row, int _number)
         {
             id = _id;
             row = _row;
@@ -74,7 +74,7 @@ public class Broker : MonoBehaviour
         if (sensorFamilies.Contains("humidity_inside"))
         {
             float value = 0;
-            for (int i=0; i < sensorValues["humidity_inside"].Count; i ++)
+            for (int i = 0; i < sensorValues["humidity_inside"].Count; i++)
             {
                 value += Convert.ToSingle(sensorValues["humidity_inside"][i]);
             }

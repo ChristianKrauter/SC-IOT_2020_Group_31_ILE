@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using CymaticLabs.Unity3D.Amqp;
 using UnityEngine;
-using CymaticLabs.Unity3D.Amqp;
 
 public class ChairRowController : MonoBehaviour
 {
@@ -33,7 +31,7 @@ public class ChairRowController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void sendData(SensorData data)
@@ -43,7 +41,7 @@ public class ChairRowController : MonoBehaviour
             string json = JsonUtility.ToJson(data);
             amqp.PublishToExchange("chairs", "", json);
         }
-        
+
     }
 
     #region Event Handlers
@@ -51,7 +49,7 @@ public class ChairRowController : MonoBehaviour
     // Handles a connection event
     void HandleConnected(AmqpClient client)
     {
-        
+
     }
 
 

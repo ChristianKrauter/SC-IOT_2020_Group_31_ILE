@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public class SensorData
+﻿public class SensorData
 {
     public string type;
     public int id;
