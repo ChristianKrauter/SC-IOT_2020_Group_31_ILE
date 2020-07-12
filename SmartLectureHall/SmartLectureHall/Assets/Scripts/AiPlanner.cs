@@ -356,39 +356,48 @@ public class AiPlanner : MonoBehaviour
         float Temp_IN = broker.GetTemperatureInside();
         float Temp_OUT = broker.GetTemperatureOutside();
 
-        bool tooColdOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemperature) && !IsTemp1InRangeOfTemp2(wantedTemperature, Temp_IN)
-            && Temp_OUT < wantedTemperature && wantedTemperature < Temp_IN;
+        bool InOutEquals = IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT);
+        bool InWantedEquals = IsTemp1InRangeOfTemp2(Temp_IN, wantedTemp);
+        bool OutWantedEquals = IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemp);
 
-        bool tooHotOutside = !IsTemp1InRangeOfTemp2(Temp_OUT, Temp_IN) && !IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature)
-            && Temp_OUT > Temp_IN && Temp_IN > wantedTemperature;
+        if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
+        {//worse OR openWin
 
-        //Check if opening the window makes the temperature worse
-        if (tooColdOutside || tooHotOutside)
-        {
-            if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
-            {// Value is in Range but outside value make it worse. -> dont open Window
+            bool tooHotOutside = wantedTemp > Temp_IN && Temp_IN > Temp_OUT;
+            bool tooColdOutside = Temp_OUT > Temp_IN && Temp_IN > wantedTemp;
+
+            if (tooHotOutside || tooColdOutside)
+            {//outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
                 print("Temp:  Value is in Range but outside value make it worse");
             }
             else
-            {// Value is not in Range so activate AirCondition
-                this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
-                print("Temp: activate AirCondition");
-            }
-        }
-        else
-        {   //external values good enough
-
-            if (IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature))
-            {// Value is in Range but window open is not possible. Release window for the othe values
-                this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.noMatter;
-                print("Temp: Window released for other Values");
-            }
-            else
-            {
+            {//open window neessary
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.openWindow;
                 print("Temp: Window flag set");
             }
+            return;
+        }
+
+        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals))
+        {//AC
+            this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
+            print("Temp: activate AirCondition");
+            return;
+        }
+
+        if (!InOutEquals && InWantedEquals && !OutWantedEquals)
+        {//dontOpenWin
+            this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
+            print("Temp:  Value is in Range but outside value make it worse");
+            return;
+        }
+
+        if (InOutEquals && InWantedEquals && OutWantedEquals)
+        {//doNothing
+            this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
+            print("Temp:  Value is in Range but outside value make it worse");
+            return;
         }
     }
 
