@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using CymaticLabs.Unity3D.Amqp;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Chair : MonoBehaviour
 {
@@ -26,8 +28,14 @@ public class Chair : MonoBehaviour
     string sensorId;
     bool sensorValue;
 
+    ChairRowController chairRowController;
+   
+
     public void Start()
     {
+
+        
+
         this.isOccupied = false;
 
         // Load materials
@@ -47,7 +55,8 @@ public class Chair : MonoBehaviour
         student.gameObject.SetActive(false);
         sensorId = transform.parent.name.Split('_')[2] + "-" + this.name.Split('r')[1];
         sensorValue = isOccupied;
-        broker.SendData(sensorId, sensorValue);
+
+        chairRowController = this.gameObject.GetComponentInParent<ChairRowController>();
     }
 
     public void LockChair()
@@ -79,7 +88,15 @@ public class Chair : MonoBehaviour
         RandomTaint();
         student.gameObject.SetActive(true);
         sensorValue = true;
-        broker.SendData(sensorId, sensorValue);
+
+        SensorData data = new SensorData();
+        data.position = sensorId;
+        data.family = "";
+        data.occupancie = isOccupied;
+        data.type = "chair";
+
+        chairRowController.sendData(data);
+        
     }
 
     public void EmptyChair()
@@ -87,7 +104,14 @@ public class Chair : MonoBehaviour
         isOccupied = false;
         student.gameObject.SetActive(false);
         sensorValue = false;
-        broker.SendData(sensorId, sensorValue);
+
+        SensorData data = new SensorData();
+        data.position = sensorId;
+        data.family = "";
+        data.occupancie = isOccupied;
+        data.type = "chair";
+
+        chairRowController.sendData(data);
     }
 
     private void RandomTaint()
@@ -160,4 +184,6 @@ public class Chair : MonoBehaviour
             UnlockChair();
         }
     }
+
+    
 }
