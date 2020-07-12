@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class AiPlanner : MonoBehaviour
 {
-    
+
     // Actuators
     public Window window;
     public Window window2;
@@ -42,8 +42,8 @@ public class AiPlanner : MonoBehaviour
         SensorFamaliesCOUNT
     }
 
-    enum AirQualityActions 
-    { 
+    enum AirQualityActions
+    {
         dontOpenWindow, // ==0 =>default
         openWindow,
         activateAirCon,
@@ -141,10 +141,6 @@ public class AiPlanner : MonoBehaviour
         }
         // Wait for objects to be loaded before loading first seating plan
         StartCoroutine(WaitForLoading());
-
-        
-        
-
     }
 
     IEnumerator WaitForLoading()
@@ -155,52 +151,50 @@ public class AiPlanner : MonoBehaviour
 
     void Update()
     {
-        
-        
-            UpdateInfoDisplay();
-            aiUpdateTimer += Time.deltaTime;
+        UpdateInfoDisplay();
+        aiUpdateTimer += Time.deltaTime;
 
-            // Start AI planner update
-            if (aiUpdateTimer > aiUpdateRate)
-            {
-                AirQualityControl();
-                ApplySeatingPlan();
-                UpdateSeatingDisplay();
+        // Start AI planner update
+        if (aiUpdateTimer > aiUpdateRate)
+        {
+            AirQualityControl();
+            ApplySeatingPlan();
+            UpdateSeatingDisplay();
 
-                aiUpdateTimer = 0;
-            }
+            aiUpdateTimer = 0;
+        }
 
-            // Handle user input for seating plan changes
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                LoadSeatingPlan("standard");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                LoadSeatingPlan("frontHalf");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                LoadSeatingPlan("smallClass");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                LoadSeatingPlan("mcTest");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                LoadSeatingPlan("exam");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                LoadSeatingPlan("pandemic");
-            }   
+        // Handle user input for seating plan changes
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            LoadSeatingPlan("standard");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            LoadSeatingPlan("frontHalf");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            LoadSeatingPlan("smallClass");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            LoadSeatingPlan("mcTest");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            LoadSeatingPlan("exam");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            LoadSeatingPlan("pandemic");
+        }
     }
 
     // Get values from broker to update information display
     void UpdateInfoDisplay()
     {
-        infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(GetTemperatureInside(),1).ToString("#0.0");
+        infoDisplay.transform.GetChild(0).Find("tempIn").GetComponent<TextMeshProUGUI>().text = Math.Round(GetTemperatureInside(), 1).ToString("#0.0");
         infoDisplay.transform.GetChild(0).Find("tempOut").GetComponent<TextMeshProUGUI>().text = Math.Round(GetTemperatureOutside(), 1).ToString("#0.0");
 
         infoDisplay.transform.GetChild(0).Find("humidIn").GetComponent<TextMeshProUGUI>().text = Math.Round(GetHumidityInside(), 1).ToString("#0.0");
@@ -221,7 +215,7 @@ public class AiPlanner : MonoBehaviour
     // Update seating display according to seating plan and students
     void UpdateSeatingDisplay()
     {
-        
+
         print("Update display");
         occupancie = GetSeatOccupancy();
         for (int i = 0; i < 19; i++)
@@ -337,8 +331,8 @@ public class AiPlanner : MonoBehaviour
         bool AcPulsAny = this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.activateAirCon) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.activateAirCon);
 
         // Combination of "openWindow" and "dontOpenWindow" -> AC
-        bool openWindowPlusDontOpenWindow = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) 
-            || (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow))) 
+        bool openWindowPlusDontOpenWindow = (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow)))
+            || (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.dontOpenWindow)))
             || (this.aqActions[(int)SensorFamalies.CO2].Equals(AirQualityActions.openWindow) && (this.aqActions[(int)SensorFamalies.Humidity].Equals(AirQualityActions.dontOpenWindow) || this.aqActions[(int)SensorFamalies.Temperature].Equals(AirQualityActions.dontOpenWindow)));
 
         if (AcPulsAny || openWindowPlusDontOpenWindow)
@@ -467,7 +461,7 @@ public class AiPlanner : MonoBehaviour
         bool InWantedEquals = IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity);
         bool OutWantedEquals = IsHum1InRangeOfHum2(Humidity_OUT, wantedHumidity);
 
-        if (!InOutEquals && !InWantedEquals && !OutWantedEquals) 
+        if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
 
             bool tooDryAirOutside = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
@@ -486,7 +480,7 @@ public class AiPlanner : MonoBehaviour
             return;
         }
 
-        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals) )
+        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals))
         {//AC
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
             print("Humidity: activate AirCondition");
@@ -583,10 +577,11 @@ public class AiPlanner : MonoBehaviour
     void handleIncomingMessage(AmqpExchangeSubscription subscription, IAmqpReceivedMessage message)
     {
         SensorData data = JsonUtility.FromJson<SensorData>(ByteArrayToString(message.Body));
-        if(data.type == "add")
+        if (data.type == "add")
         {
             AddSensor(data.family, data.id, data.value);
-        } else
+        }
+        else
         {
             Sensor sensor = sensors[data.id];
             sensorValues[sensor.sensorFamily][sensor.sensorSlot] = data.value;
@@ -646,7 +641,7 @@ public class AiPlanner : MonoBehaviour
 
     #region data processing
 
-   
+
 
     public void AddSensor(string sensorFamily, int sensorId, float sensorData)
     {
@@ -661,7 +656,7 @@ public class AiPlanner : MonoBehaviour
             Sensor sensor = new Sensor(sensorId, sensorFamily, sensorSlot);
             sensors.Add(sensor.id, sensor);
         }
-        
+
     }
 
 

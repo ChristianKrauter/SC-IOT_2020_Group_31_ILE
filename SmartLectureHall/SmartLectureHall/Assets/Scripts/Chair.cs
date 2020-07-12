@@ -1,6 +1,4 @@
-﻿using CymaticLabs.Unity3D.Amqp;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Chair : MonoBehaviour
 {
@@ -29,12 +27,12 @@ public class Chair : MonoBehaviour
     bool sensorValue;
 
     ChairRowController chairRowController;
-   
+
 
     public void Start()
     {
 
-        
+
 
         this.isOccupied = false;
 
@@ -96,7 +94,7 @@ public class Chair : MonoBehaviour
         data.type = "chair";
 
         chairRowController.sendData(data);
-        
+
     }
 
     public void EmptyChair()
@@ -185,5 +183,5 @@ public class Chair : MonoBehaviour
         }
     }
 
-    
+
 }

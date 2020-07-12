@@ -13,7 +13,7 @@ public class Environment : MonoBehaviour
     public float outer_co2 = 5.0f;
     public float inner_co2 = 6.0f;
 
-    [Range(0,266)]
+    [Range(0, 266)]
     public int numberOfStudents = 50;
 
     public GameObject seat_rows;
@@ -88,7 +88,7 @@ public class Environment : MonoBehaviour
             }
             if (airConditioning)
             {
-                RunAirConditioning(airConditioningTemp, airConditioningHumid , airConditioningCO2);
+                RunAirConditioning(airConditioningTemp, airConditioningHumid, airConditioningCO2);
             }
         }
 
@@ -126,7 +126,7 @@ public class Environment : MonoBehaviour
     private void StudentHumidityContribution()
     {
         // print(string.Format("Student Humid += {0}", ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f * 15883f)) * 100f));
-        inner_humidity += ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f*15883f)) * 100f;
+        inner_humidity += ((0.00000462963f * numberOfStudents * studentTempHumidUpdateRate) / (0.02f * 15883f)) * 100f;
     }
 
     // Students increase CO2
@@ -203,7 +203,7 @@ public class Environment : MonoBehaviour
             inner_co2 -= 0.001f;
         }
     }
-    
+
     // Reset students and re-distribute randomly
     private void DistributeStudents()
     {

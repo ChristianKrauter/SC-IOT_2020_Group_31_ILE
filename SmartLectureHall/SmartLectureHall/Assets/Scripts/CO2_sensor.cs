@@ -1,7 +1,4 @@
 ﻿using CymaticLabs.Unity3D.Amqp;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class CO2_sensor : MonoBehaviour
@@ -13,7 +10,7 @@ public class CO2_sensor : MonoBehaviour
     public float timer = 0.0f;
     public float sensorValue = 0.0f;
     int sensorId;
-    AmqpClient amqp;    
+    AmqpClient amqp;
 
     void Start()
     {
@@ -35,7 +32,7 @@ public class CO2_sensor : MonoBehaviour
         amqp.OnUnsubscribedFromExchange.AddListener(HandleExchangeUnsubscribed);
         amqp.Connection = "localhost";
         amqp.WriteToConsole = false;
-        
+
 
 
         if (inside)
@@ -106,7 +103,7 @@ public class CO2_sensor : MonoBehaviour
         amqp.PublishToExchange("sensorData", "", json);
     }
 
-    
+
     // Handles a disconnection event
     void HandleDisconnected(AmqpClient client)
     {

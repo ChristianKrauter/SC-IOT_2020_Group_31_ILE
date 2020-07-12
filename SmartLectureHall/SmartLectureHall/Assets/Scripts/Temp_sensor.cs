@@ -1,12 +1,9 @@
 ﻿using CymaticLabs.Unity3D.Amqp;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class Temp_sensor : MonoBehaviour
 {
-    
+
     public Environment env;
     public bool inside;
     public string sensorType;
@@ -82,7 +79,7 @@ public class Temp_sensor : MonoBehaviour
     // Handles a connection event
     void HandleConnected(AmqpClient client)
     {
-       
+
         SensorData data = new SensorData();
         data.id = sensorId;
         data.family = sensorFamily;

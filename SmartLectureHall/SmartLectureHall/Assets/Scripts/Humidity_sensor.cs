@@ -1,5 +1,4 @@
 ﻿using CymaticLabs.Unity3D.Amqp;
-using System.Threading;
 using UnityEngine;
 
 public class Humidity_sensor : MonoBehaviour
@@ -19,7 +18,7 @@ public class Humidity_sensor : MonoBehaviour
         {
             timer = 0.0f;
             SensorUpdate();
-            
+
         }
     }
 
@@ -43,7 +42,7 @@ public class Humidity_sensor : MonoBehaviour
         amqp.Connection = "localhost";
         amqp.WriteToConsole = false;
 
-        
+
 
         if (inside)
         {
