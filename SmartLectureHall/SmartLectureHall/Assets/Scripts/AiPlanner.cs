@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class AiPlanner : MonoBehaviour
 
     // Target values
     public float wantedTemperature = 20.0f; // centigrade
-    public float wantedHumidity = 45.0f; // humidity in % at the desired temperature
+    public float wantedHumidity = 45.0f; // == 45% humidity in % at the desired temperature
     public float wantedCO2 = 3.5f; // == 3.5 % CO2
 
     // Tolerances
@@ -31,7 +32,6 @@ public class AiPlanner : MonoBehaviour
 
     public float aiUpdateRate = 60.0f;
     private float aiUpdateTimer = 0.0f;
-    //private bool isWindowOpen = false;
 
     // One entry for each sensor family
     enum SensorFamalies
@@ -390,10 +390,12 @@ public class AiPlanner : MonoBehaviour
         bool InOutEquals = IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT);
         bool InWantedEquals = IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature);
         bool OutWantedEquals = IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemperature);
+        print("###################################################################");
+        print("#######Temp: InOutEqual: " + InOutEquals + " sInWantedEquals: " + InWantedEquals + " OutWantedEquals: " + OutWantedEquals);
 
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
-
+            print("Temp1");
             bool tooHotOutside = wantedTemperature > Temp_IN && Temp_IN > Temp_OUT;
             bool tooColdOutside = Temp_OUT > Temp_IN && Temp_IN > wantedTemperature;
 
@@ -410,26 +412,34 @@ public class AiPlanner : MonoBehaviour
             return;
         }
 
-        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals))
+        print("Temp2");
+
+        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) || (InOutEquals && !InWantedEquals && !OutWantedEquals))
         {//AC
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
             print("Temp: activate AirCondition");
             return;
         }
 
+        print("Temp3");
+
         if (!InOutEquals && InWantedEquals && !OutWantedEquals)
         {//dontOpenWin
+            print("Temp");
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
             print("Temp:  Value is in Range but outside value make it worse");
             return;
         }
+        print("Temp4");
 
         if (InOutEquals && InWantedEquals && OutWantedEquals)
         {//doNothing
+            print("Temp");
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
             print("Temp:  Value is in Range but outside value make it worse");
             return;
         }
+        print("Temp5");
     }
 
     //Checks if given value is in humidity range
