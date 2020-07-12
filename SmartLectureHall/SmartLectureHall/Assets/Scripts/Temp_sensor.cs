@@ -14,6 +14,17 @@ public class Temp_sensor : MonoBehaviour
 
     AmqpClient amqp;
 
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer > 5.0f)
+        {
+            timer = 0.0f;
+            SensorUpdate();
+
+        }
+    }
+
     void Start()
     {
 
