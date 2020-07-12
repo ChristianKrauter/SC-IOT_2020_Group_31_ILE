@@ -414,7 +414,20 @@ public class AiPlanner : MonoBehaviour
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals) 
         {//worse OR openWin
 
-            //##########TODO##########
+            bool tooDryAirOutside = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
+            bool tooHazyAirOutside = Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity;
+
+            if (tooDryAirOutside || tooHazyAirOutside)
+            {//outside value make it worse. -> dont open Window
+                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
+                print("Humidity:  Value is in Range but outside value make it worse");
+            }
+            else
+            {//open window neessary
+                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
+                print("Humidity: Window flag set");
+            }
+
             return;
 
         }
@@ -438,40 +451,6 @@ public class AiPlanner : MonoBehaviour
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
             print("Humidity:  Value is in Range but outside value make it worse");
             return;
-        }
-
-        //!IsHum1InRangeOfHum2(wantedHumidity, Humidity_IN) && !IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT);
-        bool tooDryAirOutside = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
-        bool tooHazyAirOutside = Humidity_OUT > Humidity_IN  && Humidity_IN > wantedHumidity;
-
-        //Check if opening the window makes the humidity worse
-        if ( tooDryAirOutside || tooHazyAirOutside) 
-        {//IN and OUT outside of Range of wanted
-            //outside values too bad
-            if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
-            {// Value is in Range but outside value make it worse. -> dont open Window
-                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
-                print("Humidity:  Value is in Range but outside value make it worse");
-            }
-            else
-            {// Value is not in Range so activate AirCondition
-                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
-                print("Humidity: activate AirCondition");
-            }
-        }
-        else
-        {//min one of (IN ,OUT) in Range of wanted   
-            //external values good enough
-            if (IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity))
-            {// Value is in Range but window open is not possible. Release window for the othe values
-                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.noMatter;
-                print("Humidity: Window released for other Values");
-            }
-            else
-            {//open window neessary
-                this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
-                print("Humidity: Window flag set");
-            }
         }
     }
 
