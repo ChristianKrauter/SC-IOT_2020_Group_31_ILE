@@ -427,9 +427,7 @@ public class AiPlanner : MonoBehaviour
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
                 print("Humidity: Window flag set");
             }
-
             return;
-
         }
 
         if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals) )
@@ -469,37 +467,48 @@ public class AiPlanner : MonoBehaviour
         float CO2_IN = broker.GetCO2Inside();
         float CO2_OUT = broker.GetCO2Outside();
 
-        bool notStuffyEnoughAirOutside = !IsCO2_1InRangeOfCO2_2(wantedCO2, CO2_IN) && wantedCO2 > CO2_IN && !IsCO2_1InRangeOfCO2_2(CO2_IN, CO2_OUT) && CO2_IN > CO2_OUT;
-        bool tooStuffyAirOutside = !IsCO2_1InRangeOfCO2_2(CO2_OUT, CO2_IN) && CO2_OUT > CO2_IN && !IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2) && CO2_IN > wantedCO2;
+        bool InOutEquals = IsCO2_1InRangeOfCO2_2(CO2y_IN, CO2_OUT);
+        bool InWantedEquals = IsCO2_1InRangeOfCO2_2(CO2y_IN, wantedCO2);
+        bool OutWantedEquals = IsCO2_1InRangeOfCO2_2(CO2_OUT, wantedCO2);
 
-        //Check if opening the window makes the CO2 worse
-        if (notStuffyEnoughAirOutside || tooStuffyAirOutside)
-        {//outside values too bad
+        if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
+        {//worse OR openWin
 
-            if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
-            {// Value is in Range but outside value make it worse. -> dont open Window
+            bool tooStuffyAir = wantedHumidity > Humidity_IN && Humidity_IN > Humidity_OUT;
+            bool tooCleanAir = Humidity_OUT > Humidity_IN && Humidity_IN > wantedHumidity;
+
+            if (tooStuffyAir || tooCleanAir)
+            {//outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.dontOpenWindow;
                 print("CO2:  Value is in Range but outside value make it worse");
             }
             else
-            {// Value is not in Range so activate AirCondition
-                this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
-                print("CO2: activate AirCondition");
-            }
-        }
-        else
-        {
-            if (IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2))
-            {// Value is in Range but window open is not nesessary. Release window for the othe values
-                this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.noMatter;
-                print("CO2: Window released for other Values");
-            }
-            else
-            {
+            {//open window neessary
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.openWindow;
-                print("CO2: Window flag set");
+                print("Humidity: Window flag set");
             }
+            return;
         }
-        
+
+        if ((!InOutEquals && !InWantedEquals && OutWantedEquals) && (InOutEquals && !InWantedEquals && !OutWantedEquals))
+        {//AC
+            this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
+            print("CO2: activate AirCondition");
+            return;
+        }
+
+        if (!InOutEquals && InWantedEquals && !OutWantedEquals)
+        {//dontOpenWin
+            this.aqActions[(int)SensorFamalies.Co2] = AirQualityActions.dontOpenWindow;
+            print("CO2:  Value is in Range but outside value make it worse");
+            return;
+        }
+
+        if (InOutEquals && InWantedEquals && OutWantedEquals)
+        {//doNothing
+            this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.dontOpenWindow;
+            print("CO2:  Value is in Range but outside value make it worse");
+            return;
+        }
     }
 }
