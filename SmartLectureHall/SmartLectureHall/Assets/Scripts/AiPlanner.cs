@@ -216,7 +216,7 @@ public class AiPlanner : MonoBehaviour
     void UpdateSeatingDisplay()
     {
 
-        print("Update display");
+        //print("Update display");
         occupancie = GetSeatOccupancy();
         for (int i = 0; i < 19; i++)
         {
@@ -239,7 +239,7 @@ public class AiPlanner : MonoBehaviour
     // Reset all chairs and lock according to seating plan
     void ApplySeatingPlan()
     {
-        print("Apply seating plan");
+        //print("Apply seating plan");
         // Reset
         for (int i = 0; i < 19; i++)
         {
@@ -284,7 +284,7 @@ public class AiPlanner : MonoBehaviour
 
     void OpenWindows()
     {
-        print("Windows opened");
+        //print("Windows opened");
         window.Open();
         window2.Open();
         //isWindowOpen = true;
@@ -292,7 +292,7 @@ public class AiPlanner : MonoBehaviour
 
     void CloseWindows()
     {
-        print("Windows closed");
+        //print("Windows closed");
         window.Close();
         window2.Close();
         //isWindowOpen = false;
@@ -300,7 +300,7 @@ public class AiPlanner : MonoBehaviour
 
     void ActivateAirCondition()
     {
-        print("Air conditioning activated: ");
+        //print("Air conditioning activated: ");
         airCon.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon2.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
         airCon3.TurnOn(wantedTemperature, wantedHumidity, wantedCO2);
@@ -309,7 +309,7 @@ public class AiPlanner : MonoBehaviour
 
     void DeactivateAirCondition()
     {
-        print("Air conditioning deactivated");
+        //print("Air conditioning deactivated");
         airCon.TurnOff();
         airCon2.TurnOff();
         airCon3.TurnOff();
@@ -390,8 +390,6 @@ public class AiPlanner : MonoBehaviour
         bool InOutEquals = IsTemp1InRangeOfTemp2(Temp_IN, Temp_OUT);
         bool InWantedEquals = IsTemp1InRangeOfTemp2(Temp_IN, wantedTemperature);
         bool OutWantedEquals = IsTemp1InRangeOfTemp2(Temp_OUT, wantedTemperature);
-        print("####### Temp_IN: " + Temp_IN + " Temp_OUT: " + Temp_OUT);
-        //print("####### Temp: InOutEqual: " + InOutEquals + " InWantedEquals: " + InWantedEquals + " OutWantedEquals: " + OutWantedEquals);
 
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
@@ -402,12 +400,12 @@ public class AiPlanner : MonoBehaviour
             if (tooHotOutside || tooColdOutside)
             {//outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
-                print("Temp:  Value is in Range but outside value make it worse");
+                //print("Temp:  Value is in Range but outside value make it worse");
             }
             else
             {//open window neessary
                 this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.openWindow;
-                print("Temp: Window flag set");
+                //print("Temp: Window flag set");
             }
             return;
         }
@@ -415,27 +413,27 @@ public class AiPlanner : MonoBehaviour
         if (!InOutEquals && !InWantedEquals && OutWantedEquals)
         {//open window neessary
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.openWindow;
-            print("Temp: Window flag set");
+            //print("Temp: Window flag set");
         }
 
         if (InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//activate AC neessary
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.activateAirCon;
-            print("Temp: activate AirCondition");
+            //print("Temp: activate AirCondition");
             return;
         }
 
         if (!InOutEquals && InWantedEquals && !OutWantedEquals)
         {//dontOpenWin
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.dontOpenWindow;
-            print("Temp:  Value is in Range but outside value make it worse");
+            //print("Temp:  Value is in Range but outside value make it worse");
             return;
         }
 
         if (InOutEquals && InWantedEquals && OutWantedEquals)
         {//doNothing
             this.aqActions[(int)SensorFamalies.Temperature] = AirQualityActions.noMatter;
-            print("Temp:  Value is in Range but outside value make it worse");
+            //print("Temp:  Value is in Range but outside value make it worse");
             return;
         }
     }
@@ -458,9 +456,7 @@ public class AiPlanner : MonoBehaviour
         bool InOutEquals = IsHum1InRangeOfHum2(Humidity_IN, Humidity_OUT);
         bool InWantedEquals = IsHum1InRangeOfHum2(Humidity_IN, wantedHumidity);
         bool OutWantedEquals = IsHum1InRangeOfHum2(Humidity_OUT, wantedHumidity);
-        print("####### Humidity_IN: " + Humidity_IN + " Humidity_OUT " + Humidity_OUT);
-        //print("####### Temp: InOutEqual: " + InOutEquals + " InWantedEquals: " + InWantedEquals + " OutWantedEquals: " + OutWantedEquals);
-
+       
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
 
@@ -470,12 +466,12 @@ public class AiPlanner : MonoBehaviour
             if (tooDryAirOutside || tooHazyAirOutside)
             {//outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
-                print("Hum:  Value is in Range but outside value make it worse");
+                //print("Hum:  Value is in Range but outside value make it worse");
             }
             else
             {//open window neessary
                 this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
-                print("Hum: Window flag set");
+                //print("Hum: Window flag set");
             }
             return;
         }
@@ -483,27 +479,27 @@ public class AiPlanner : MonoBehaviour
         if (!InOutEquals && !InWantedEquals && OutWantedEquals)
         {//open window neessary
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.openWindow;
-            print("Hum: Window flag set");
+            //print("Hum: Window flag set");
         }
 
         if (InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//activate AC neessary
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.activateAirCon;
-            print("Hum: activate AirCondition");
+            //print("Hum: activate AirCondition");
             return;
         }
 
         if (!InOutEquals && InWantedEquals && !OutWantedEquals)
         {//dontOpenWin
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.dontOpenWindow;
-            print("Hum:  Value is in Range but outside value make it worse");
+            //print("Hum:  Value is in Range but outside value make it worse");
             return;
         }
 
         if (InOutEquals && InWantedEquals && OutWantedEquals)
         {//doNothing
             this.aqActions[(int)SensorFamalies.Humidity] = AirQualityActions.noMatter;
-            print("Hum:  Value is in Range but outside value make it worse");
+            //print("Hum:  Value is in Range but outside value make it worse");
             return;
         }
     }
@@ -526,9 +522,7 @@ public class AiPlanner : MonoBehaviour
         bool InOutEquals = IsCO2_1InRangeOfCO2_2(CO2_IN, CO2_OUT);
         bool InWantedEquals = IsCO2_1InRangeOfCO2_2(CO2_IN, wantedCO2);
         bool OutWantedEquals = IsCO2_1InRangeOfCO2_2(CO2_OUT, wantedCO2);
-        print("####### CO2_IN: " + CO2_IN + " CO2_OUT: " + CO2_OUT);
-        //print("####### Temp: InOutEqual: " + InOutEquals + " InWantedEquals: " + InWantedEquals + " OutWantedEquals: " + OutWantedEquals);
-
+        
         if (!InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//worse OR openWin
 
@@ -538,12 +532,12 @@ public class AiPlanner : MonoBehaviour
             if (tooStuffyAir || tooCleanAir)
             {//outside value make it worse. -> dont open Window
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
-                print(" CO2:  Value is in Range but outside value make it worse");
+                //print(" CO2:  Value is in Range but outside value make it worse");
             }
             else
             {//open window neessary
                 this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.openWindow;
-                print("CO2: Window flag set");
+                //print("CO2: Window flag set");
             }
             return;
         }
@@ -551,27 +545,27 @@ public class AiPlanner : MonoBehaviour
         if (!InOutEquals && !InWantedEquals && OutWantedEquals)
         {//open window neessary
             this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.openWindow;
-            print("CO2: Window flag set");
+            //print("CO2: Window flag set");
         }
 
         if (InOutEquals && !InWantedEquals && !OutWantedEquals)
         {//activate AC neessary
             this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.activateAirCon;
-            print("CO2: activate AirCondition");
+            //print("CO2: activate AirCondition");
             return;
         }
 
         if (!InOutEquals && InWantedEquals && !OutWantedEquals)
         {//dontOpenWin
             this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.dontOpenWindow;
-            print("CO2:  Value is in Range but outside value make it worse");
+            //print("CO2:  Value is in Range but outside value make it worse");
             return;
         }
 
         if (InOutEquals && InWantedEquals && OutWantedEquals)
         {//doNothing
             this.aqActions[(int)SensorFamalies.CO2] = AirQualityActions.noMatter;
-            print("CO2:  Value is in Range but outside value make it worse");
+            //print("CO2:  Value is in Range but outside value make it worse");
             return;
         }
     }
@@ -593,7 +587,6 @@ public class AiPlanner : MonoBehaviour
         SensorData data = JsonUtility.FromJson<SensorData>(ByteArrayToString(message.Body));
         if (data.type == "add")
         {
-            print("hier sollte nun 'Add' stehen---------------------------------------------------------------------------------------------------");
             AddSensor(data.family, data.id, data.value);
         }
         else
