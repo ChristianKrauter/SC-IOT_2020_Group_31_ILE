@@ -593,6 +593,7 @@ public class AiPlanner : MonoBehaviour
         SensorData data = JsonUtility.FromJson<SensorData>(ByteArrayToString(message.Body));
         if (data.type == "add")
         {
+            print("hier sollte nun 'Add' stehen---------------------------------------------------------------------------------------------------");
             AddSensor(data.family, data.id, data.value);
         }
         else
